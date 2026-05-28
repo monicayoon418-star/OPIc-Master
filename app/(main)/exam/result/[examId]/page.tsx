@@ -7,12 +7,13 @@ import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 
-export default async function ExamResultPage({ params }: { params: { examId: string } }) {
+export default async function ExamResultPage({ params }: { params: Promise<{ examId: string }> }) {
+  const { examId } = await params
   const session = await auth()
   if (!session) notFound()
 
   const exam = await prisma.exam.findUnique({
-    where: { id: params.examId },
+    where: { id: examId },
     include: { answers: true },
   })
 
@@ -45,7 +46,6 @@ export default async function ExamResultPage({ params }: { params: { examId: str
         </Link>
       </div>
 
-      {/* Summary */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-toss-gray50 rounded-2xl p-4 text-center">
           <p className="text-xs text-toss-gray500 mb-1">총 문항</p>
@@ -61,7 +61,6 @@ export default async function ExamResultPage({ params }: { params: { examId: str
         </div>
       </div>
 
-      {/* Settings */}
       <div className="bg-toss-blueLight/50 border border-toss-blue/20 rounded-2xl p-5 mb-8">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -83,7 +82,6 @@ export default async function ExamResultPage({ params }: { params: { examId: str
         </div>
       </div>
 
-      {/* Questions & Answers */}
       <div className="space-y-4 mb-10">
         {questions.map((q, i) => {
           const answer = answerMap[i]

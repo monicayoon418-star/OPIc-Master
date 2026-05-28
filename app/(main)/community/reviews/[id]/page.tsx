@@ -6,11 +6,12 @@ import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import CommentSection from '@/components/community/CommentSection'
 
-export default async function ReviewDetailPage({ params }: { params: { id: string } }) {
+export default async function ReviewDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await auth()
 
   const post = await prisma.post.findUnique({
-    where: { id: params.id, deletedAt: null },
+    where: { id, deletedAt: null },
     include: {
       user: { select: { id: true, nickname: true } },
       comments: {
@@ -23,7 +24,7 @@ export default async function ReviewDetailPage({ params }: { params: { id: strin
 
   if (!post) notFound()
 
-  await prisma.post.update({ where: { id: params.id }, data: { viewCount: { increment: 1 } } })
+  await prisma.post.update({ where: { id }, data: { viewCount: { increment: 1 } } })
 
   const isOwner = session?.user?.id === post.userId
   const isAdmin = session?.user?.role === 'ADMIN'
@@ -43,7 +44,6 @@ export default async function ReviewDetailPage({ params }: { params: { id: strin
           {(isOwner || isAdmin) && (
             <div className="flex gap-2">
               {isOwner && <Link href={`/community/reviews/${post.id}/edit`} className="text-toss-blue hover:underline">수정</Link>}
-              <DeletePostButton postId={post.id} isAdmin={isAdmin} />
             </div>
           )}
         </div>
@@ -60,13 +60,5 @@ export default async function ReviewDetailPage({ params }: { params: { id: strin
         isAdmin={isAdmin}
       />
     </div>
-  )
-}
-
-function DeletePostButton({ postId, isAdmin }: { postId: string; isAdmin: boolean }) {
-  return (
-    <form action={`/api/community/posts/${postId}`} method="DELETE">
-      <button type="submit" className="text-toss-red hover:underline text-sm">삭제</button>
-    </form>
   )
 }

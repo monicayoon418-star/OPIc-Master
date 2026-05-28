@@ -6,11 +6,12 @@ import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import CommentSection from '@/components/community/CommentSection'
 
-export default async function StudyTipDetailPage({ params }: { params: { id: string } }) {
+export default async function StudyTipDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await auth()
 
   const post = await prisma.post.findUnique({
-    where: { id: params.id, type: 'TIP', deletedAt: null },
+    where: { id, type: 'TIP', deletedAt: null },
     include: {
       user: { select: { id: true, nickname: true } },
       comments: {
@@ -23,7 +24,7 @@ export default async function StudyTipDetailPage({ params }: { params: { id: str
 
   if (!post) notFound()
 
-  await prisma.post.update({ where: { id: params.id }, data: { viewCount: { increment: 1 } } })
+  await prisma.post.update({ where: { id }, data: { viewCount: { increment: 1 } } })
 
   const isOwner = session?.user?.id === post.userId
   const isAdmin = session?.user?.role === 'ADMIN'

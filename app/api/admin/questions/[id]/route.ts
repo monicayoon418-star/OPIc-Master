@@ -7,15 +7,17 @@ async function requireAdmin() {
   return session?.user?.role === 'ADMIN' ? session : null
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   const data = await req.json()
-  const q = await prisma.question.update({ where: { id: params.id }, data })
+  const q = await prisma.question.update({ where: { id }, data })
   return NextResponse.json(q)
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  await prisma.question.delete({ where: { id: params.id } })
+  await prisma.question.delete({ where: { id } })
   return NextResponse.json({ ok: true })
 }
