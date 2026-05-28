@@ -4,8 +4,9 @@ import { Icon } from '@iconify/react'
 import PostCard from '@/components/community/PostCard'
 import { auth } from '@/lib/auth'
 
-export default async function ReviewsPage({ searchParams }: { searchParams: { page?: string } }) {
-  const page = Number(searchParams?.page ?? 1)
+export default async function ReviewsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const { page: pageParam } = await searchParams
+  const page = Number(pageParam ?? 1)
   const pageSize = 20
   const session = await auth()
 

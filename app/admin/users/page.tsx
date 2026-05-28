@@ -2,8 +2,9 @@ import { prisma } from '@/lib/db'
 import { formatDate } from '@/lib/utils'
 import DeleteUserButton from './DeleteUserButton'
 
-export default async function AdminUsersPage({ searchParams }: { searchParams: { page?: string } }) {
-  const page = Number(searchParams?.page ?? 1)
+export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const { page: pageParam } = await searchParams
+  const page = Number(pageParam ?? 1)
   const pageSize = 30
 
   const [users, total] = await Promise.all([

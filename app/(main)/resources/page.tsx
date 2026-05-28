@@ -1,10 +1,9 @@
 import { prisma } from '@/lib/db'
-import { getYoutubeThumbnail, extractYoutubeId } from '@/lib/utils'
+import { getYoutubeThumbnail } from '@/lib/utils'
 import { Icon } from '@iconify/react'
-import Image from 'next/image'
 
-export default async function ResourcesPage({ searchParams }: { searchParams: { tag?: string } }) {
-  const tag = searchParams?.tag
+export default async function ResourcesPage({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
+  const { tag } = await searchParams
 
   const resources = await prisma.resource.findMany({
     where: tag ? { tags: { has: tag } } : undefined,
@@ -20,7 +19,6 @@ export default async function ResourcesPage({ searchParams }: { searchParams: { 
         <p className="text-toss-gray600">유익한 유튜브 강의를 모아뒀어요.</p>
       </div>
 
-      {/* Tag Filter */}
       {allTags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8">
           <a href="/resources" className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all ${!tag ? 'bg-toss-blue text-white border-toss-blue' : 'bg-white border-toss-gray200 text-toss-gray700 hover:border-toss-blue/50'}`}>
