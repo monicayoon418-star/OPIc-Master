@@ -1,0 +1,101 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #191f28;
+    background: #ffffff;
+  }
+
+  ::selection {
+    background: #3182f6;
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e5e8eb;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b0b8c1;
+  }
+}
+
+@keyframes blob-float {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  33%  { transform: translate(-12%, 18%) scale(1.18) rotate(12deg); }
+  66%  { transform: translate(15%, -12%) scale(0.85) rotate(-12deg); }
+  100% { transform: translate(-8%, -18%) scale(1.27) rotate(6deg); }
+}
+
+/* scale 최대(1.27)일 때 opacity 0.5배로 옅어짐 */
+@keyframes blob-color-blue {
+  0%   { background: #5a99ff; opacity: 0.85; }
+  33%  { background: #a8c8ff; opacity: 0.55; }
+  66%  { background: #7ab3ff; opacity: 0.72; }
+  100% { background: #c5daff; opacity: 0.42; }
+}
+
+@keyframes blob-color-lightblue {
+  0%   { background: #b5d1ff; opacity: 0.85; }
+  33%  { background: #ddeeff; opacity: 0.5; }
+  66%  { background: #c8e0ff; opacity: 0.68; }
+  100% { background: #eef5ff; opacity: 0.42; }
+}
+
+@keyframes blob-color-white {
+  0%   { background: #ffffff; opacity: 0.9; }
+  33%  { background: #e8f2ff; opacity: 0.55; }
+  66%  { background: #f5f9ff; opacity: 0.8; }
+  100% { background: #d8ecff; opacity: 0.45; }
+}
+
+@layer utilities {
+  .keep-all {
+    word-break: keep-all;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

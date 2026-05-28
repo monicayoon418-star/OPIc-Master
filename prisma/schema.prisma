@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Job {
+  STUDENT
+  GRADUATE_STUDENT
+  JOB_SEEKER
+  EMPLOYEE
+}
+
+enum PostType {
+  REVIEW
+  TIP
+}
+
+enum RequestStatus {
+  PENDING
+  ANSWERED
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String?   @unique
+  password  String?
+  nickname  String    @unique
+  age       Int?
+  job       Job?
+  kakaoId   String?   @unique
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  exams      Exam[]
+  posts      Post[]
+  comments   Comment[]
+  savedItems SavedItem[]
+  requests   Request[]
+  reports    Report[]    @relation("reporter")
+  reported   Report[]    @relation("reported")
+}
+
+model ExamGenerationCriteria {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Question {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+  category   String
+  difficulty Int
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Exam {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  difficulty1 Int
+  difficulty2 Int?
+  targetLevel String?
+  keywords    Json
+  questions   Json      @default("[]")
+  status      String    @default("SETUP")
+  startedAt   DateTime?
+  endedAt     DateTime?
+  createdAt   DateTime  @default(now())
+
+  answers ExamAnswer[]
+  savedBy SavedItem[]
+}
+
+model ExamAnswer {
+  id            String   @id @default(cuid())
+  examId        String
+  exam          Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  questionIndex Int
+  audioKey      String?
+  duration      Int?
+  createdAt     DateTime @default(now())
+
+  @@unique([examId, questionIndex])
+}
+
+model Post {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  type      PostType
+  title     String
+  content   String    @db.Text
+  viewCount Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  comments Comment[]
+  savedBy  SavedItem[]
+  reports  Report[]
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  postId    String
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  reports Report[]
+}
+
+model Resource {
+  id           String   @id @default(cuid())
+  title        String
+  youtubeUrl   String
+  thumbnailUrl String?
+  description  String?  @db.Text
+  tags         String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  savedBy SavedItem[]
+}
+
+model SavedItem {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  postId     String?
+  post       Post?     @relation(fields: [postId], references: [id])
+  resourceId String?
+  resource   Resource? @relation(fields: [resourceId], references: [id])
+  examId     String?
+  exam       Exam?     @relation(fields: [examId], references: [id])
+  createdAt  DateTime  @default(now())
+
+  @@unique([userId, postId])
+  @@unique([userId, resourceId])
+}
+
+model Request {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  content     String        @db.Text
+  response    String?       @db.Text
+  status      RequestStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  respondedAt DateTime?
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  reporter   User     @relation("reporter", fields: [reporterId], references: [id])
+  reportedId String
+  reported   User     @relation("reported", fields: [reportedId], references: [id])
+  postId     String?
+  post       Post?    @relation(fields: [postId], references: [id])
+  commentId  String?
+  comment    Comment? @relation(fields: [commentId], references: [id])
+  reason     String
+  handled    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
