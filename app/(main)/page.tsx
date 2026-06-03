@@ -86,10 +86,9 @@ export default function LandingPage() {
           {/* 면책 고지 */}
           <p
             className="reveal text-center keep-all"
-            style={{ transitionDelay: '320ms', fontSize: '11px', color: '#525D6F', maxWidth: '360px', lineHeight: '1.6', marginTop: '12px' }}
+            style={{ transitionDelay: '320ms', fontSize: '11px', color: '#525D6F', maxWidth: '420px', lineHeight: '1.6', marginTop: '20px' }}
           >
-            본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.<br />
-            OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
+            본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
           </p>
         </div>
 
