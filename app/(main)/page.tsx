@@ -55,8 +55,8 @@ export default function LandingPage() {
 
           {/* 메인 타이틀 */}
           <h1
-            className="reveal font-semibold text-toss-dark leading-[1.1] mb-7 keep-all"
-            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em' }}
+            className="reveal font-semibold text-toss-dark leading-[1.1] keep-all"
+            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '18px' }}
           >
             OPIc Master
           </h1>
