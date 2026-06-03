@@ -17,9 +17,9 @@ const SPHERE_CONFIGS = [
 ]
 
 const SPEEDS = [
-  { vx: 0.55,  vy: 0.40  },
-  { vx: -0.75, vy: 0.60  },
-  { vx: 0.65,  vy: -0.70 },
+  { vx: 1.10,  vy: 0.80  },
+  { vx: -1.50, vy: 1.20  },
+  { vx: 1.30,  vy: -1.40 },
 ]
 
 export default function BouncingSpheres() {

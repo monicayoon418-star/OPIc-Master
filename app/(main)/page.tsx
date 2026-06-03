@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import BouncingSpheres from '@/components/ui/BouncingSpheres'
+import { formatDate } from '@/lib/utils'
 
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
@@ -11,13 +12,23 @@ const HOW_IT_WORKS = [
   { step: '03', icon: 'solar:download-bold-duotone', title: '저장 & 다운로드', desc: '생성된 문제를 마이페이지에 저장하거나 텍스트 파일로 다운로드합니다.' },
 ]
 
+interface Post { id: string; title: string; type: string; user: { nickname: string }; createdAt: string }
+
 export default function LandingPage() {
+  const [recentPosts, setRecentPosts] = useState<Post[]>([])
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('active')),
       { threshold: 0.1 }
     )
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+    fetch('/api/community/posts?pageSize=4')
+      .then(r => r.json())
+      .then(d => setRecentPosts(d.data ?? []))
+      .catch(() => {})
+
     return () => observer.disconnect()
   }, [])
 
@@ -36,7 +47,7 @@ export default function LandingPage() {
 
           {/* 상단 레이블 */}
           <p
-            className="reveal text-sm text-toss-gray500 mb-6 tracking-wide"
+            className="reveal text-sm font-semibold text-toss-blue mb-6 tracking-wide"
             style={{ transitionDelay: '0ms' }}
           >
             실제 기출 문제 기반 OPIc 예상 문제 서비스
@@ -44,18 +55,17 @@ export default function LandingPage() {
 
           {/* 메인 타이틀 */}
           <h1
-            className="reveal text-5xl md:text-7xl font-bold text-toss-dark leading-[1.08] tracking-tight mb-8 keep-all"
-            style={{ transitionDelay: '80ms' }}
+            className="reveal font-semibold text-toss-dark leading-[1.1] mb-7 keep-all"
+            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em' }}
           >
             OPIc Master
           </h1>
 
           {/* 설명글 */}
           <p
-            className="reveal text-base md:text-lg text-toss-gray500 leading-relaxed mb-10 keep-all max-w-md font-normal"
-            style={{ transitionDelay: '160ms' }}
+            className="reveal text-toss-gray500 leading-relaxed mb-10 keep-all font-normal"
+            style={{ transitionDelay: '160ms', fontSize: '14px' }}
           >
-            실제 OPIc 기출 문제 데이터를 바탕으로<br />
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.
           </p>
@@ -140,28 +150,52 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-28 bg-toss-blue text-white relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl -top-40 -right-20" />
-          <div className="absolute w-[400px] h-[400px] bg-toss-dark/10 rounded-full blur-3xl -bottom-20 -left-10" />
-        </div>
-        <div className="relative max-w-3xl mx-auto px-4 text-center">
-          <h2 className="reveal text-4xl md:text-5xl font-bold tracking-tight mb-6 keep-all">
-            목표 등급, 지금 바로<br />도전하세요.
-          </h2>
-          <p className="reveal text-lg text-white/80 mb-10 keep-all" style={{ transitionDelay: '100ms' }}>
-            회원가입 후 무제한 문제 생성을 무료로 이용하세요.
-          </p>
-          <div className="reveal" style={{ transitionDelay: '200ms' }}>
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-2 bg-white text-toss-blue px-10 py-4 rounded-full text-lg font-bold hover:bg-toss-gray50 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
-            >
-              무료로 시작하기
-              <Icon icon="solar:arrow-right-linear" className="text-xl" />
+      {/* 시험 후기 미리보기 */}
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="reveal flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-bold text-toss-dark mb-2">시험 후기</h2>
+              <p className="text-toss-gray600">OPIc 수험생들의 생생한 경험을 확인하세요</p>
+            </div>
+            <Link href="/community" className="flex items-center gap-1 text-sm font-semibold text-toss-blue hover:underline">
+              전체 보기 <Icon icon="solar:arrow-right-linear" />
             </Link>
           </div>
+
+          {recentPosts.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-4">
+              {recentPosts.map(post => (
+                <Link
+                  key={post.id}
+                  href={`/community/${post.type === 'REVIEW' ? 'reviews' : 'study-tips'}/${post.id}`}
+                  className="reveal p-5 bg-white border border-toss-gray100 rounded-2xl hover:border-toss-blue/30 hover:shadow-sm transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
+                      post.type === 'REVIEW' ? 'bg-toss-blueLight text-toss-blue' : 'bg-green-100 text-toss-green'
+                    }`}>
+                      {post.type === 'REVIEW' ? '시험 후기' : '문제생성 후기'}
+                    </span>
+                  </div>
+                  <p className="font-semibold text-toss-dark mb-2 line-clamp-1">{post.title}</p>
+                  <div className="flex items-center gap-2 text-xs text-toss-gray500">
+                    <span>{post.user.nickname}</span>
+                    <span>·</span>
+                    <span>{formatDate(post.createdAt)}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="reveal text-center py-16 bg-toss-gray50 rounded-3xl">
+              <Icon icon="solar:chat-round-bold-duotone" className="text-5xl text-toss-gray300 mx-auto mb-4 block" />
+              <p className="text-toss-gray500 mb-4">아직 작성된 후기가 없습니다</p>
+              <Link href="/community/reviews/new" className="inline-flex items-center gap-2 bg-toss-blue text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-toss-blueHover transition-colors">
+                첫 후기 작성하기
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </>

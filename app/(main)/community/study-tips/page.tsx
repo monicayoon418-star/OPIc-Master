@@ -25,7 +25,7 @@ export default async function StudyTipsPage({ searchParams }: { searchParams: Pr
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-toss-dark">공부법 후기</h1>
+          <h1 className="text-2xl font-bold text-toss-dark">문제생성 후기</h1>
           <p className="text-sm text-toss-gray500 mt-1">총 {total}개의 게시글</p>
         </div>
         {session && (
@@ -40,7 +40,7 @@ export default async function StudyTipsPage({ searchParams }: { searchParams: Pr
         {posts.length === 0 ? (
           <div className="py-16 text-center text-toss-gray400">
             <Icon icon="solar:lightbulb-bold-duotone" className="text-4xl mx-auto mb-3 block" />
-            <p>첫 번째 공부법 후기를 작성해보세요!</p>
+            <p>첫 번째 문제생성 후기를 작성해보세요!</p>
           </div>
         ) : (
           posts.map(post => (

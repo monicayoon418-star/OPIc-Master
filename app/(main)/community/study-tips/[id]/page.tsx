@@ -5,6 +5,7 @@ import { formatDate } from '@/lib/utils'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import CommentSection from '@/components/community/CommentSection'
+import DeletePostButton from '@/components/community/DeletePostButton'
 
 export default async function StudyTipDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -34,7 +35,7 @@ export default async function StudyTipDetailPage({ params }: { params: Promise<{
       <div className="mb-6">
         <Link href="/community/study-tips" className="flex items-center gap-1 text-sm text-toss-gray500 hover:text-toss-dark mb-4">
           <Icon icon="solar:arrow-left-linear" />
-          공부법 후기 목록
+          문제생성 후기 목록
         </Link>
         <h1 className="text-2xl font-bold text-toss-dark mb-3 keep-all">{post.title}</h1>
         <div className="flex items-center gap-3 text-sm text-toss-gray500">
@@ -42,8 +43,9 @@ export default async function StudyTipDetailPage({ params }: { params: Promise<{
           <span>{formatDate(post.createdAt.toISOString())}</span>
           <span className="flex items-center gap-1 ml-auto"><Icon icon="solar:eye-bold" />{post.viewCount}</span>
           {(isOwner || isAdmin) && (
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {isOwner && <Link href={`/community/study-tips/${post.id}/edit`} className="text-toss-blue hover:underline">수정</Link>}
+              <DeletePostButton postId={post.id} backHref="/community/study-tips" />
             </div>
           )}
         </div>

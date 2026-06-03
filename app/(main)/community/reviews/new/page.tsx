@@ -30,7 +30,7 @@ export default function NewReviewPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold text-toss-dark mb-8">후기 작성</h1>
+      <h1 className="text-2xl font-bold text-toss-dark mb-8">시험 후기 작성</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
         <Input label="제목" value={title} onChange={e => setTitle(e.target.value)} placeholder="후기 제목을 입력하세요" />
         <Textarea label="내용" value={content} onChange={e => setContent(e.target.value)} rows={12} placeholder="OPIc 시험 경험과 후기를 자유롭게 작성해주세요." />

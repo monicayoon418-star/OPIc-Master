@@ -5,6 +5,7 @@ import { formatDate } from '@/lib/utils'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import CommentSection from '@/components/community/CommentSection'
+import DeletePostButton from '@/components/community/DeletePostButton'
 
 export default async function ReviewDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -34,7 +35,7 @@ export default async function ReviewDetailPage({ params }: { params: Promise<{ i
       <div className="mb-6">
         <Link href="/community/reviews" className="flex items-center gap-1 text-sm text-toss-gray500 hover:text-toss-dark mb-4">
           <Icon icon="solar:arrow-left-linear" />
-          오픽 후기 목록
+          시험 후기 목록
         </Link>
         <h1 className="text-2xl font-bold text-toss-dark mb-3 keep-all">{post.title}</h1>
         <div className="flex items-center gap-3 text-sm text-toss-gray500">
@@ -42,14 +43,15 @@ export default async function ReviewDetailPage({ params }: { params: Promise<{ i
           <span>{formatDate(post.createdAt.toISOString())}</span>
           <span className="flex items-center gap-1 ml-auto"><Icon icon="solar:eye-bold" />{post.viewCount}</span>
           {(isOwner || isAdmin) && (
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {isOwner && <Link href={`/community/reviews/${post.id}/edit`} className="text-toss-blue hover:underline">수정</Link>}
+              <DeletePostButton postId={post.id} backHref="/community/reviews" />
             </div>
           )}
         </div>
       </div>
 
-      <div className="prose prose-sm max-w-none text-toss-gray800 leading-relaxed whitespace-pre-wrap mb-10 p-6 bg-white border border-toss-gray100 rounded-2xl">
+      <div className="whitespace-pre-wrap text-toss-gray800 leading-relaxed mb-10 p-6 bg-white border border-toss-gray100 rounded-2xl text-sm">
         {post.content}
       </div>
 

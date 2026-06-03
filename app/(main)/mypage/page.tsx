@@ -69,9 +69,9 @@ export default async function MyPage() {
       <div className="grid grid-cols-2 gap-3 mb-6">
         {[
           { href: '/mypage/history', icon: 'solar:document-bold-duotone', label: '저장한 문제 세트', color: 'text-toss-blue' },
-          { href: '/mypage/saved', icon: 'solar:bookmark-bold-duotone', label: '저장한 오픽 자료', color: 'text-toss-green' },
-          { href: '/mypage/requests', icon: 'solar:chat-square-bold-duotone', label: '요청사항', color: 'text-purple-500' },
-          { href: '/mypage/account', icon: 'solar:settings-bold-duotone', label: '계정 설정', color: 'text-toss-gray600' },
+          { href: '/mypage/my-posts', icon: 'solar:pen-bold-duotone', label: '내가 쓴 글', color: 'text-toss-green' },
+          { href: '/mypage/saved', icon: 'solar:bookmark-bold-duotone', label: '저장한 글/자료', color: 'text-purple-500' },
+          { href: '/mypage/requests', icon: 'solar:chat-square-bold-duotone', label: '요청사항', color: 'text-toss-gray600' },
         ].map(item => (
           <Link key={item.href} href={item.href} className="flex items-center gap-3 p-4 bg-white border border-toss-gray100 rounded-2xl hover:border-toss-blue/20 hover:shadow-sm transition-all">
             <Icon icon={item.icon} className={`text-2xl ${item.color}`} />
