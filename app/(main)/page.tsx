@@ -47,8 +47,8 @@ export default function LandingPage() {
 
           {/* 상단 레이블 */}
           <p
-            className="reveal text-sm font-semibold text-toss-blue mb-6 tracking-wide"
-            style={{ transitionDelay: '0ms' }}
+            className="reveal text-sm font-semibold text-toss-blue tracking-wide"
+            style={{ transitionDelay: '0ms', marginBottom: '16px' }}
           >
             실제 기출 문제 기반 OPIc 예상 문제 서비스
           </p>
@@ -56,7 +56,7 @@ export default function LandingPage() {
           {/* 메인 타이틀 */}
           <h1
             className="reveal font-semibold text-toss-dark leading-[1.1] keep-all"
-            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '18px' }}
+            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '12px' }}
           >
             OPIc Master
           </h1>

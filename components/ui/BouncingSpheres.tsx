@@ -13,7 +13,7 @@ interface SphereState {
 const SPHERE_CONFIGS = [
   { r: 270, color: '#b5d1ff', blur: 70,  opacity: 0.85 },
   { r: 150, color: '#7ab3ff', blur: 45,  opacity: 0.80 },
-  { r: 120, color: '#3182f6', blur: 32,  opacity: 0.75 },
+  { r: 120, color: '#3182f6', blur: 20,  opacity: 0.75 },
 ]
 
 const SPEEDS = [
