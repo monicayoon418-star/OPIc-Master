@@ -35,7 +35,7 @@ export default function PreviewPage() {
         setResult(data)
       }
     } catch (e) {
-      setError('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
+      setError(`오류: ${e instanceof Error ? e.message : String(e)}`)
     } finally {
       setLoading(false)
     }
