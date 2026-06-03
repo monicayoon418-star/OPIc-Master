@@ -11,15 +11,15 @@ interface SphereState {
 }
 
 const SPHERE_CONFIGS = [
-  { r: 260, color: '#a8c8ff', blur: 80, opacity: 0.75 },
-  { r: 160, color: '#7ab3ff', blur: 60, opacity: 0.70 },
-  { r: 140, color: '#3182f6', blur: 50, opacity: 0.65 },
+  { r: 270, color: '#b5d1ff', blur: 90,  opacity: 0.85 },
+  { r: 150, color: '#7ab3ff', blur: 60,  opacity: 0.80 },
+  { r: 120, color: '#3182f6', blur: 45,  opacity: 0.75 },
 ]
 
 const SPEEDS = [
-  { vx: 0.7,  vy: 0.5  },
-  { vx: -0.9, vy: 0.75 },
-  { vx: 0.55, vy: -0.8 },
+  { vx: 0.55,  vy: 0.40  },
+  { vx: -0.75, vy: 0.60  },
+  { vx: 0.65,  vy: -0.70 },
 ]
 
 export default function BouncingSpheres() {
@@ -36,8 +36,8 @@ export default function BouncingSpheres() {
     const ch = container.offsetHeight
 
     statesRef.current = SPHERE_CONFIGS.map((cfg, i) => ({
-      x: cw * (0.2 + i * 0.28),
-      y: ch * (0.25 + i * 0.22),
+      x: cw * (0.18 + i * 0.32),
+      y: ch * (0.30 + i * 0.20),
       vx: SPEEDS[i].vx,
       vy: SPEEDS[i].vy,
       r: cfg.r,
@@ -75,12 +75,12 @@ export default function BouncingSpheres() {
           ref={el => { domsRef.current[i] = el }}
           className="absolute will-change-transform"
           style={{
-            width:  cfg.r * 2,
-            height: cfg.r * 2,
+            width:        cfg.r * 2,
+            height:       cfg.r * 2,
             borderRadius: '50%',
-            background: `radial-gradient(circle at 50% 50%, ${cfg.color} 0%, ${cfg.color}99 35%, ${cfg.color}33 65%, transparent 80%)`,
-            filter: `blur(${cfg.blur}px)`,
-            opacity: cfg.opacity,
+            background:   `radial-gradient(circle at 50% 50%, ${cfg.color} 0%, ${cfg.color}bb 30%, ${cfg.color}44 60%, transparent 80%)`,
+            filter:       `blur(${cfg.blur}px)`,
+            opacity:      cfg.opacity,
           }}
         />
       ))}

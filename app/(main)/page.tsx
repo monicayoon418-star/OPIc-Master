@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import BouncingSpheres from '@/components/ui/BouncingSpheres'
@@ -12,28 +12,13 @@ const HOW_IT_WORKS = [
 ]
 
 export default function LandingPage() {
-  const rightVisualRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    // reveal 애니메이션
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('active')),
       { threshold: 0.1 }
     )
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-
-    // 우측 비주얼 패럴랙스
-    const onScroll = () => {
-      if (!rightVisualRef.current) return
-      const y = window.scrollY
-      rightVisualRef.current.style.transform = `translateY(${y * 0.12}px)`
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('scroll', onScroll)
-    }
+    return () => observer.disconnect()
   }, [])
 
   const scrollToNext = () => {
@@ -43,76 +28,66 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen -mt-16 flex items-center bg-white overflow-hidden px-4">
+      <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-white overflow-hidden px-4">
         <BouncingSpheres />
-        <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 items-center pt-24 pb-20">
 
-          {/* 왼쪽: 텍스트 + 버튼 */}
-          <div>
-            <p className="reveal text-sm font-semibold text-toss-blue mb-4 tracking-widest uppercase" style={{ transitionDelay: '0ms' }}>
-              OPIc 예상 문제 생성 서비스
-            </p>
-            <h1 className="reveal text-5xl lg:text-6xl font-bold text-toss-dark leading-[1.1] mb-6 keep-all" style={{ transitionDelay: '80ms' }}>
-              실제 기출로<br />준비하는<br />
-              <span className="text-toss-blue">OPIc 학습</span>
-            </h1>
-            <p className="reveal text-base lg:text-lg text-toss-gray600 mb-10 keep-all leading-relaxed max-w-md" style={{ transitionDelay: '160ms' }}>
-              실제 OPIc 기출 문제 데이터를 바탕으로<br />
-              키워드와 목표 등급을 선택하면<br />
-              나만의 맞춤 예상 문제를 즉시 제공합니다.<br />
-              지금 바로 무료로 시작해보세요.
-            </p>
-            <div className="reveal flex flex-col sm:flex-row gap-3 w-full max-w-sm" style={{ transitionDelay: '240ms' }}>
-              <Link
-                href="/exam"
-                className="flex-1 bg-toss-blue hover:bg-toss-blueHover text-white px-8 py-4 rounded-full text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(49,130,246,0.6)] flex items-center justify-center whitespace-nowrap"
-              >
-                모의문제 생성하기
-              </Link>
-              <a
-                href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-white border border-toss-gray200 text-toss-dark px-8 py-4 rounded-full text-base font-bold hover:bg-toss-gray50 transition-all flex items-center justify-center whitespace-nowrap"
-              >
-                오픽 공홈 바로가기
-              </a>
-            </div>
-          </div>
+        {/* 중앙 콘텐츠 */}
+        <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
 
-          {/* 오른쪽: 글로우 비주얼 */}
-          <div ref={rightVisualRef} className="relative flex items-center justify-center h-[420px] lg:h-[500px]">
-            {/* 글로우 블롭 레이어들 */}
-            <div className="absolute w-[380px] h-[380px] rounded-full"
-              style={{ background: 'radial-gradient(circle at 40% 50%, #3182f6 0%, #7ab3ff 45%, transparent 70%)', filter: 'blur(48px)', opacity: 0.55 }} />
-            <div className="absolute w-[280px] h-[280px] rounded-full"
-              style={{ background: 'radial-gradient(circle at 60% 40%, #a8c8ff 0%, #3182f6 50%, transparent 75%)', filter: 'blur(36px)', opacity: 0.45, transform: 'translate(40px, -20px)' }} />
-            <div className="absolute w-[200px] h-[200px] rounded-full"
-              style={{ background: 'radial-gradient(circle, #e8f3ff 0%, #7ab3ff 60%, transparent 80%)', filter: 'blur(24px)', opacity: 0.6, transform: 'translate(-30px, 30px)' }} />
+          {/* 상단 레이블 */}
+          <p
+            className="reveal text-sm text-toss-gray500 mb-6 tracking-wide"
+            style={{ transitionDelay: '0ms' }}
+          >
+            실제 기출 문제 기반 OPIc 예상 문제 서비스
+          </p>
 
-            {/* 세로 슬릿 오버레이 (CRUNCHY 스타일) */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-full w-px bg-white/20 mx-8" />
-              ))}
-            </div>
+          {/* 메인 타이틀 */}
+          <h1
+            className="reveal text-5xl md:text-7xl font-bold text-toss-dark leading-[1.08] tracking-tight mb-8 keep-all"
+            style={{ transitionDelay: '80ms' }}
+          >
+            OPIc Master
+          </h1>
 
-            {/* OPIc Master 텍스트 */}
-            <div className="relative z-10 text-center select-none">
-              <p className="text-4xl lg:text-5xl font-black text-white tracking-tight drop-shadow-[0_2px_24px_rgba(49,130,246,0.8)]">
-                OPIc Master
-              </p>
-              <p className="text-sm text-white/70 mt-2 font-medium tracking-widest">기출 문제 기반 학습</p>
-            </div>
+          {/* 설명글 */}
+          <p
+            className="reveal text-base md:text-lg text-toss-gray500 leading-relaxed mb-10 keep-all max-w-md font-normal"
+            style={{ transitionDelay: '160ms' }}
+          >
+            실제 OPIc 기출 문제 데이터를 바탕으로<br />
+            키워드와 목표 등급을 선택하면<br />
+            나만의 맞춤 예상 문제를 즉시 제공합니다.
+          </p>
+
+          {/* 버튼 */}
+          <div
+            className="reveal flex flex-col sm:flex-row gap-3"
+            style={{ transitionDelay: '240ms' }}
+          >
+            <Link
+              href="/exam"
+              className="bg-toss-dark hover:bg-toss-gray800 text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              모의문제 생성하기
+            </Link>
+            <a
+              href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white border border-toss-gray200 text-toss-dark px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-toss-gray50 transition-all"
+            >
+              오픽 공홈 바로가기
+            </a>
           </div>
         </div>
 
-        {/* 스크롤 다운 화살표 */}
+        {/* 스크롤 화살표 */}
         <button
           onClick={scrollToNext}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors group"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors"
         >
-          <span className="text-xs font-medium tracking-widest">SCROLL</span>
+          <span className="text-xs tracking-widest">SCROLL</span>
           <Icon icon="solar:arrow-down-linear" className="text-xl animate-bounce" />
         </button>
       </section>
@@ -176,7 +151,7 @@ export default function LandingPage() {
             목표 등급, 지금 바로<br />도전하세요.
           </h2>
           <p className="reveal text-lg text-white/80 mb-10 keep-all" style={{ transitionDelay: '100ms' }}>
-            회원가입 후 무제한 문제 생성과 커뮤니티를 무료로 이용하세요.
+            회원가입 후 무제한 문제 생성을 무료로 이용하세요.
           </p>
           <div className="reveal" style={{ transitionDelay: '200ms' }}>
             <Link
