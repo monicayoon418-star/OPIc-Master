@@ -47,7 +47,7 @@ export default function LandingPage() {
 
           {/* 상단 레이블 */}
           <p
-            className="reveal text-sm font-semibold text-toss-blue tracking-wide"
+            className="reveal text-sm font-semibold text-white tracking-wide"
             style={{ transitionDelay: '0ms', marginBottom: '16px' }}
           >
             실제 기출 문제 기반 OPIc 예상 문제 서비스
@@ -55,7 +55,7 @@ export default function LandingPage() {
 
           {/* 메인 타이틀 */}
           <h1
-            className="reveal font-semibold text-toss-dark leading-[1.1] keep-all"
+            className="reveal font-semibold text-white leading-[1.1] keep-all"
             style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '12px' }}
           >
             OPIc Master
@@ -64,7 +64,7 @@ export default function LandingPage() {
           {/* 설명글 */}
           <p
             className="reveal leading-relaxed mb-10 keep-all font-normal"
-            style={{ transitionDelay: '160ms', fontSize: '14px', color: '#1A1C20' }}
+            style={{ transitionDelay: '160ms', fontSize: '14px', color: 'rgba(255,255,255,0.90)' }}
           >
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.

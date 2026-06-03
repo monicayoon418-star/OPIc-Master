@@ -16,6 +16,7 @@ const SPHERE_CONFIGS = [
   { r: 260, color: '#818cf8', blur: 70,  opacity: 0.75 }, // 인디고
   { r: 220, color: '#3b82f6', blur: 55,  opacity: 0.80 }, // 진한 파랑
   { r: 180, color: '#a5b4fc', blur: 60,  opacity: 0.70 }, // 라벤더
+  { r: 240, color: '#7dd3fc', blur: 80,  opacity: 0.78 }, // 하늘색 (추가)
 ]
 
 const SPEEDS = [
@@ -24,12 +25,13 @@ const SPEEDS = [
   { vx:  0.75, vy: -0.80 },
   { vx: -0.65, vy:  0.90 },
   { vx:  0.85, vy: -0.55 },
+  { vx: -0.70, vy: -0.65 },
 ]
 
 export default function BouncingSpheres() {
   const containerRef = useRef<HTMLDivElement>(null)
   const statesRef   = useRef<SphereState[]>([])
-  const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null, null, null])
+  const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null, null, null, null])
   const rafRef      = useRef<number>(0)
 
   useEffect(() => {
