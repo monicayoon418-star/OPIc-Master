@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import BouncingSpheres from '@/components/ui/BouncingSpheres'
+import GlassOverlay from '@/components/ui/GlassOverlay'
 import { formatDate } from '@/lib/utils'
 
 const HOW_IT_WORKS = [
@@ -41,6 +42,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-white overflow-hidden px-4">
         <BouncingSpheres />
+        <GlassOverlay />
 
         {/* 중앙 콘텐츠 */}
         <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
@@ -63,8 +65,8 @@ export default function LandingPage() {
 
           {/* 설명글 */}
           <p
-            className="reveal text-toss-gray500 leading-relaxed mb-10 keep-all font-normal"
-            style={{ transitionDelay: '160ms', fontSize: '14px' }}
+            className="reveal leading-relaxed mb-10 keep-all font-normal"
+            style={{ transitionDelay: '160ms', fontSize: '14px', color: '#1A1C20' }}
           >
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.
