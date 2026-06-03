@@ -116,6 +116,16 @@ export default function GuidePage() {
         </div>
       </div>
 
+      {/* 출처 표기 */}
+      <div className="flex items-start gap-2 px-4 py-3 bg-toss-gray50 border border-toss-gray200 rounded-2xl text-xs text-toss-gray500 mb-10">
+        <Icon icon="solar:info-circle-bold" className="flex-shrink-0 mt-0.5" />
+        <p>
+          본 페이지의 시험 정보는{' '}
+          <a href="https://www.opic.or.kr" target="_blank" rel="noopener noreferrer" className="underline hover:text-toss-blue">OPIc 공식 사이트(opic.or.kr)</a>를
+          참고하여 작성되었습니다. OPIc Master는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
+        </p>
+      </div>
+
       {/* Exam Process */}
       <div className="bg-toss-blueLight rounded-3xl p-8">
         <div className="flex items-center gap-3 mb-6">

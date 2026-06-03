@@ -69,9 +69,17 @@ export default function QuestionsAdmin() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-toss-dark">기출 문제 관리</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-toss-dark">문제 관리</h1>
         <Button onClick={openNew}><Icon icon="solar:add-circle-bold" className="mr-1.5" />문제 추가</Button>
+      </div>
+
+      <div className="flex items-start gap-2 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-xs text-yellow-800 mb-6">
+        <Icon icon="solar:danger-triangle-bold" className="flex-shrink-0 mt-0.5 text-yellow-600" />
+        <p>
+          <span className="font-semibold">저작권 주의:</span> 실제 OPIc 기출 문제를 그대로 등록하지 마세요.
+          반드시 표현을 변경하거나 유사하게 재작성한 문제만 등록해 주세요.
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-toss-gray100 overflow-hidden">

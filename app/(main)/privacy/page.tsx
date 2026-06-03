@@ -74,6 +74,15 @@ export default function PrivacyPage() {
           <p>본 방침이 변경될 경우 서비스 내 공지사항을 통해 사전 안내합니다.</p>
         </section>
 
+        <section className="p-5 bg-toss-gray50 rounded-2xl border border-toss-gray200">
+          <h2 className="text-base font-bold text-toss-dark mb-2">면책 고지</h2>
+          <p className="text-toss-gray600">
+            OPIc Master는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
+            OPIc(Oral Proficiency Interview by Computer)은 ACTFL이 개발하고 YBM이 한국 내 운영을 담당하는 공인 영어 말하기 시험입니다.
+            본 서비스에서 제공하는 예상 문제는 AI를 활용하여 유사하게 생성된 학습용 문제이며, 실제 시험 문제와 동일하지 않습니다.
+          </p>
+        </section>
+
       </div>
     </div>
   )

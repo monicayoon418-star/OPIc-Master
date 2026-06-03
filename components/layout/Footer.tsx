@@ -38,7 +38,11 @@ export default function Footer() {
 
         </div>
 
-        <div className="mt-10 pt-6 border-t border-toss-gray200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-toss-gray400">
+        <p className="mt-8 text-xs text-toss-gray400 keep-all">
+          본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
+        </p>
+
+        <div className="mt-6 pt-6 border-t border-toss-gray200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-toss-gray400">
           <p>© 2026 OPIc Master. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-toss-gray600 font-semibold">개인정보처리방침</Link>
