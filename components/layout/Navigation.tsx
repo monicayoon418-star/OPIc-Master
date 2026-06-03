@@ -9,7 +9,6 @@ import { useState } from 'react'
 const NAV_ITEMS = [
   { href: '/guide', label: '오픽 가이드' },
   { href: '/exam', label: '문제 생성' },
-  { href: '/community', label: '커뮤니티' },
   { href: '/resources', label: '오픽 자료' },
 ]
 

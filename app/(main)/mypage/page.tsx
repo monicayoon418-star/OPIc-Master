@@ -69,7 +69,7 @@ export default async function MyPage() {
       <div className="grid grid-cols-2 gap-3 mb-6">
         {[
           { href: '/mypage/history', icon: 'solar:document-bold-duotone', label: '저장한 문제 세트', color: 'text-toss-blue' },
-          { href: '/mypage/saved', icon: 'solar:bookmark-bold-duotone', label: '저장한 글', color: 'text-toss-green' },
+          { href: '/mypage/saved', icon: 'solar:bookmark-bold-duotone', label: '저장한 오픽 자료', color: 'text-toss-green' },
           { href: '/mypage/requests', icon: 'solar:chat-square-bold-duotone', label: '요청사항', color: 'text-purple-500' },
           { href: '/mypage/account', icon: 'solar:settings-bold-duotone', label: '계정 설정', color: 'text-toss-gray600' },
         ].map(item => (

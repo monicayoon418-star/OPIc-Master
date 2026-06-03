@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import { getYoutubeThumbnail } from '@/lib/utils'
 import { Icon } from '@iconify/react'
+import Link from 'next/link'
 
 export default async function ResourcesPage({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
   const { tag } = await searchParams
@@ -41,11 +42,9 @@ export default async function ResourcesPage({ searchParams }: { searchParams: Pr
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {resources.map(resource => (
-            <a
+            <Link
               key={resource.id}
-              href={resource.youtubeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/resources/${resource.id}`}
               className="group bg-white border border-toss-gray100 rounded-2xl overflow-hidden hover:border-toss-blue/30 hover:shadow-[0_16px_32px_-12px_rgba(0,0,0,0.1)] transition-all"
             >
               <div className="relative aspect-video bg-toss-gray100 overflow-hidden">
@@ -71,7 +70,7 @@ export default async function ResourcesPage({ searchParams }: { searchParams: Pr
                   ))}
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       )}
