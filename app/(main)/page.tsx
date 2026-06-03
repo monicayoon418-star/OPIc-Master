@@ -42,6 +42,25 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-white overflow-hidden px-4">
         <BouncingSpheres />
+
+        {/* 중앙 타원 배경 도형 — 유리 아래, 텍스트 뒤 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            zIndex: 0,
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '52%',
+            height: '62%',
+            minWidth: '480px',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 35%, #1e1b4b 65%, transparent 82%)',
+            opacity: 0.82,
+            filter: 'blur(2px)',
+          }}
+        />
+
         <GlassOverlay />
 
         {/* 중앙 콘텐츠 */}
@@ -49,7 +68,7 @@ export default function LandingPage() {
 
           {/* 상단 레이블 */}
           <p
-            className="reveal text-sm font-semibold text-toss-blue tracking-wide"
+            className="reveal text-sm font-semibold text-white tracking-wide"
             style={{ transitionDelay: '0ms', marginBottom: '16px' }}
           >
             실제 기출 문제 기반 OPIc 예상 문제 서비스
@@ -57,7 +76,7 @@ export default function LandingPage() {
 
           {/* 메인 타이틀 */}
           <h1
-            className="reveal font-semibold text-toss-dark leading-[1.1] keep-all"
+            className="reveal font-semibold text-white leading-[1.1] keep-all"
             style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '12px' }}
           >
             OPIc Master
@@ -66,7 +85,7 @@ export default function LandingPage() {
           {/* 설명글 */}
           <p
             className="reveal leading-relaxed mb-10 keep-all font-normal"
-            style={{ transitionDelay: '160ms', fontSize: '14px', color: '#1A1C20' }}
+            style={{ transitionDelay: '160ms', fontSize: '14px', color: 'rgba(255,255,255,0.88)' }}
           >
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.
