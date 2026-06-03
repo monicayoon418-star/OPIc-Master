@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
+import BouncingSpheres from '@/components/ui/BouncingSpheres'
 
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
@@ -43,7 +44,8 @@ export default function LandingPage() {
     <>
       {/* Hero */}
       <section className="relative min-h-screen -mt-16 flex items-center bg-white overflow-hidden px-4">
-        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 items-center pt-24 pb-20">
+        <BouncingSpheres />
+        <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 items-center pt-24 pb-20">
 
           {/* 왼쪽: 텍스트 + 버튼 */}
           <div>
@@ -108,7 +110,7 @@ export default function LandingPage() {
         {/* 스크롤 다운 화살표 */}
         <button
           onClick={scrollToNext}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors group"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors group"
         >
           <span className="text-xs font-medium tracking-widest">SCROLL</span>
           <Icon icon="solar:arrow-down-linear" className="text-xl animate-bounce" />
