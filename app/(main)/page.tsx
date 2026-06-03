@@ -48,10 +48,10 @@ export default function LandingPage() {
           style={{
             left: '50%',
             top: '50%',
-            width: '500px',
-            height: '500px',
+            width: '1000px',
+            height: '1000px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle at 50% 50%, #a5b4fc 0%, #a5b4fc99 30%, #a5b4fc33 60%, transparent 78%)',
+            background: 'radial-gradient(circle at 50% 50%, #818cf8 0%, #818cf8cc 30%, #818cf855 60%, transparent 78%)',
             filter: 'blur(60px)',
             zIndex: 0,
             animation: 'blob-undulate 7s ease-in-out infinite',
