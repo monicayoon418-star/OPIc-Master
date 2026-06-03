@@ -12,9 +12,9 @@ const OPIC_STATS = [
 ]
 
 const HOW_IT_WORKS = [
-  { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하면 AI가 맞춤 문제를 생성합니다.' },
-  { step: '02', icon: 'solar:mic-bold-duotone', title: '실전 모의고사 응시', desc: '실제 OPIc 시험과 동일한 환경에서 40분간 음성으로 답변합니다.' },
-  { step: '03', icon: 'solar:document-text-bold-duotone', title: '시험지 분석 & 복습', desc: '내 답변을 다시 듣고, 질문별 소요 시간을 분석하며 복습합니다.' },
+  { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
+  { step: '02', icon: 'solar:magic-stick-bold-duotone', title: 'AI 맞춤 문제 생성', desc: '기출 문제 데이터를 기반으로 AI가 나만의 예상 문제를 즉시 생성합니다.' },
+  { step: '03', icon: 'solar:download-bold-duotone', title: '저장 & 다운로드', desc: '생성된 문제를 마이페이지에 저장하거나 텍스트 파일로 다운로드합니다.' },
 ]
 
 export default function LandingPage() {
@@ -84,13 +84,13 @@ export default function LandingPage() {
         </div>
 
         <h1 className="reveal keep-all text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6 max-w-4xl" style={{ transitionDelay: '100ms' }}>
-          실전과 똑같은<br />
-          <span className="text-toss-blue">OPIc 모의고사</span>
+          나만의 OPIc 예상 문제를<br />
+          <span className="text-toss-blue">AI가 즉시 생성</span>
         </h1>
 
         <p className="reveal text-lg md:text-xl text-toss-gray600 mb-10 max-w-xl keep-all leading-relaxed" style={{ transitionDelay: '200ms' }}>
-          AI가 나의 키워드에 맞는 문제를 생성하고,
-          실제 시험과 동일한 환경에서 40분 모의고사를 무료로 제공합니다.
+          키워드와 목표 등급을 선택하면 기출 문제 기반으로
+          나만의 맞춤 예상 문제를 무료로 생성해 드립니다.
         </p>
 
         <div className="reveal flex flex-col sm:flex-row gap-3 w-full max-w-sm" style={{ transitionDelay: '300ms' }}>
@@ -98,7 +98,7 @@ export default function LandingPage() {
             href="/exam"
             className="flex-1 bg-toss-blue hover:bg-toss-blueHover text-white px-8 py-4 rounded-full text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(49,130,246,0.6)] flex items-center justify-center whitespace-nowrap"
           >
-            모의고사 시작하기
+            모의문제 생성하기
           </Link>
           <a
             href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
@@ -117,7 +117,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="reveal text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">이렇게 사용하세요</h2>
-            <p className="text-lg text-toss-gray600">3단계로 완성되는 OPIc 실전 준비</p>
+            <p className="text-lg text-toss-gray600">3단계로 완성되는 OPIc 예상 문제 생성</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {HOW_IT_WORKS.map((item, i) => (
@@ -171,7 +171,7 @@ export default function LandingPage() {
             목표 등급, 지금 바로<br />도전하세요.
           </h2>
           <p className="reveal text-lg text-white/80 mb-10 keep-all" style={{ transitionDelay: '100ms' }}>
-            회원가입 후 무제한 모의고사와 커뮤니티를 무료로 이용하세요.
+            회원가입 후 무제한 문제 생성과 커뮤니티를 무료로 이용하세요.
           </p>
           <div className="reveal" style={{ transitionDelay: '200ms' }}>
             <Link
