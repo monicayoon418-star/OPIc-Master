@@ -1,278 +1,95 @@
-'use client'
-
-import { useEffect, useState, useCallback, useRef } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { notFound } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { formatDate } from '@/lib/utils'
 import { Icon } from '@iconify/react'
-import { useExamSessionStore } from '@/store/examStore'
-import { useAudioRecorder } from '@/hooks/useAudioRecorder'
+import Link from 'next/link'
 import Button from '@/components/ui/Button'
-import Modal from '@/components/ui/Modal'
-import { formatDuration } from '@/lib/utils'
 import type { ExamQuestion } from '@/types'
+import SaveButton from './SaveButton'
 
-interface ExamData {
-  id: string
-  questions: ExamQuestion[]
-  difficulty1: number
-}
+export default async function GeneratedSetPage({ params }: { params: Promise<{ examId: string }> }) {
+  const { examId } = await params
+  const session = await auth()
+  if (!session) notFound()
 
-export default function ExamTakingPage() {
-  const params = useParams()
-  const router = useRouter()
-  const examId = params.examId as string
+  const set = await prisma.generatedSet.findUnique({
+    where: { id: examId },
+    include: {
+      savedBy: { where: { userId: session.user.id }, select: { id: true } },
+    },
+  })
 
-  const [examData, setExamData] = useState<ExamData | null>(null)
-  const [started, setStarted] = useState(false)
-  const [showDifficultyModal, setShowDifficultyModal] = useState(false)
-  const [selectedDifficulty2, setSelectedDifficulty2] = useState(3)
-  const [exitModal, setExitModal] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
+  if (!set || set.userId !== session.user.id) notFound()
 
-  const {
-    currentQuestion, session, recordings, durations, remainingSeconds, isRunning,
-    setCurrentQuestion, setSession, addRecording, setIsRunning, setRemainingSeconds, resetSession
-  } = useExamSessionStore()
+  const questions = set.questions as unknown as ExamQuestion[]
+  const session1 = questions.filter(q => q.session === 1)
+  const session2 = questions.filter(q => q.session === 2)
+  const isSaved = set.savedBy.length > 0
 
-  const { isRecording, startRecording, stopRecording } = useAudioRecorder()
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-toss-dark mb-1">생성된 문제</h1>
+          <p className="text-sm text-toss-gray500">{formatDate(set.createdAt.toISOString())}</p>
+        </div>
+        <Link href="/mypage/history">
+          <Button variant="secondary" size="sm">
+            <Icon icon="solar:bookmark-bold" className="mr-1.5" />
+            저장 목록
+          </Button>
+        </Link>
+      </div>
 
-  useEffect(() => {
-    fetch(`/api/exam/${examId}`).then(r => r.json()).then(setExamData)
-    resetSession()
-  }, [examId])
-
-  // Timer
-  useEffect(() => {
-    if (isRunning) {
-      timerRef.current = setInterval(() => {
-        setRemainingSeconds(remainingSeconds - 1)
-        if (remainingSeconds <= 1) handleSubmit()
-      }, 1000)
-    }
-    return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [isRunning, remainingSeconds])
-
-  const session1Questions = examData?.questions.filter(q => q.session === 1) ?? []
-  const session2Questions = examData?.questions.filter(q => q.session === 2) ?? []
-  const currentQuestions = session === 1 ? session1Questions : session2Questions
-
-  const handleStart = () => {
-    setStarted(true)
-    setIsRunning(true)
-  }
-
-  const handleRecord = async () => {
-    if (isRecording) {
-      const { blob, duration } = await stopRecording()
-      addRecording(currentQuestion, blob, duration)
-    } else {
-      await startRecording(currentQuestion)
-    }
-  }
-
-  const handleNext = async () => {
-    if (isRecording) {
-      const { blob, duration } = await stopRecording()
-      addRecording(currentQuestion, blob, duration)
-    }
-
-    if (session === 1 && currentQuestion === session1Questions.length - 1) {
-      setShowDifficultyModal(true)
-      return
-    }
-
-    if (currentQuestion < currentQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-    } else {
-      handleSubmit()
-    }
-  }
-
-  const handleDifficulty2Submit = () => {
-    setShowDifficultyModal(false)
-    setSession(2)
-    setCurrentQuestion(0)
-  }
-
-  const handleSubmit = useCallback(async () => {
-    if (submitting) return
-    setIsRunning(false)
-    setSubmitting(true)
-
-    const answers = Object.entries(recordings).map(([idx, blob]) => ({
-      questionIndex: parseInt(idx),
-      blob,
-      duration: durations[parseInt(idx)] ?? 0,
-    }))
-
-    // Upload audio blobs via presigned URLs
-    for (const answer of answers) {
-      const presignRes = await fetch(`/api/exam/${examId}/presign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionIndex: answer.questionIndex }),
-      })
-      const { uploadUrl, key } = await presignRes.json()
-      await fetch(uploadUrl, { method: 'PUT', body: answer.blob, headers: { 'Content-Type': 'audio/webm' } })
-      await fetch(`/api/exam/${examId}/answer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionIndex: answer.questionIndex, audioKey: key, duration: answer.duration }),
-      })
-    }
-
-    await fetch(`/api/exam/${examId}/complete`, { method: 'POST' })
-    router.push(`/exam/result/${examId}`)
-  }, [examId, recordings, durations, submitting])
-
-  if (!examData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-toss-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-toss-gray600">시험 정보를 불러오는 중...</p>
+      <div className="bg-toss-blueLight/50 border border-toss-blue/20 rounded-2xl p-5 mb-8">
+        <div className="grid grid-cols-3 gap-4 text-sm">
+          <div>
+            <span className="text-toss-gray500 text-xs">1차 난이도</span>
+            <p className="font-bold text-toss-dark">{set.difficulty1}단계</p>
+          </div>
+          {set.difficulty2 && (
+            <div>
+              <span className="text-toss-gray500 text-xs">2차 난이도</span>
+              <p className="font-bold text-toss-dark">{set.difficulty2}단계</p>
+            </div>
+          )}
+          <div>
+            <span className="text-toss-gray500 text-xs">목표 등급</span>
+            <p className="font-bold text-toss-blue">{set.targetLevel}</p>
+          </div>
         </div>
       </div>
-    )
-  }
 
-  if (!started) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-toss-blueLight rounded-full flex items-center justify-center mx-auto mb-6">
-            <Icon icon="solar:mic-bold-duotone" className="text-4xl text-toss-blue" />
-          </div>
-          <h1 className="text-2xl font-bold mb-4">시험을 시작할 준비가 되셨나요?</h1>
-          <div className="bg-toss-gray50 rounded-2xl p-5 mb-8 text-left space-y-2">
-            {[
-              '총 ' + examData.questions.length + '문제, 제한 시간 40분',
-              '마이크 사용 권한이 필요합니다',
-              '시험 도중 나가면 저장되지 않습니다',
-              '조용한 환경에서 응시하세요',
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-toss-gray700">
-                <Icon icon="solar:check-circle-bold" className="text-toss-green" />
-                {item}
+      {[
+        { label: '1차 세션', items: session1 },
+        { label: '2차 세션', items: session2 },
+      ].filter(s => s.items.length > 0).map(({ label, items }) => (
+        <div key={label} className="mb-8">
+          <h2 className="font-bold text-toss-dark mb-4">{label} ({items.length}문항)</h2>
+          <div className="space-y-3">
+            {items.map((q, i) => (
+              <div key={q.id} className="border border-toss-gray100 rounded-2xl p-4 hover:border-toss-gray200 transition-colors">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-bold text-toss-gray500">Q{i + 1}</span>
+                  <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{q.category}</span>
+                </div>
+                <p className="text-sm text-toss-dark leading-relaxed">{q.content}</p>
               </div>
             ))}
           </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" fullWidth onClick={() => router.push('/exam')}>취소</Button>
-            <Button fullWidth size="lg" onClick={handleStart}>시작하기</Button>
-          </div>
         </div>
-      </div>
-    )
-  }
+      ))}
 
-  const question = currentQuestions[currentQuestion]
-  const isLastQuestion = session === 2 && currentQuestion === currentQuestions.length - 1
-
-  return (
-    <div className="min-h-screen flex flex-col" style={{ paddingTop: 0 }}>
-      {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-toss-gray100 px-4 py-3 flex items-center justify-between">
-        <button onClick={() => setExitModal(true)} className="flex items-center gap-1.5 text-sm text-toss-gray500 hover:text-toss-dark">
-          <Icon icon="solar:close-bold" />
-          나가기
-        </button>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-toss-gray500">{session === 1 ? '1차' : '2차'} 세션 {currentQuestion + 1}/{currentQuestions.length}</span>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold ${
-            remainingSeconds < 300 ? 'bg-red-100 text-toss-red' : 'bg-toss-blueLight text-toss-blue'
-          }`}>
-            <Icon icon="solar:clock-circle-bold" />
-            {formatDuration(remainingSeconds)}
-          </div>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="fixed top-[57px] left-0 right-0 z-40 h-1 bg-toss-gray100">
-        <div
-          className="h-full bg-toss-blue transition-all"
-          style={{ width: `${((currentQuestion + 1) / currentQuestions.length) * 100}%` }}
-        />
-      </div>
-
-      {/* Question */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-32">
-        <div className="w-full max-w-2xl">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-bold text-toss-gray500">Q{currentQuestion + 1}</span>
-            {question?.category && (
-              <span className="text-xs px-2.5 py-1 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{question.category}</span>
-            )}
-          </div>
-          <p className="text-xl md:text-2xl font-bold text-toss-dark leading-relaxed keep-all mb-10">
-            {question?.content}
-          </p>
-
-          {/* Recording */}
-          <div className="flex justify-center mb-8">
-            <button
-              onClick={handleRecord}
-              className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${
-                isRecording
-                  ? 'bg-toss-red shadow-[0_0_0_8px_rgba(240,68,82,0.2)] animate-pulse'
-                  : 'bg-toss-blue shadow-[0_8px_24px_-8px_rgba(49,130,246,0.5)] hover:scale-105'
-              }`}
-            >
-              <Icon icon={isRecording ? 'solar:stop-bold' : 'solar:mic-bold'} className="text-3xl text-white" />
-            </button>
-          </div>
-          <p className="text-center text-sm text-toss-gray500 mb-4">
-            {isRecording ? '녹음 중... 답변이 끝나면 다시 탭하세요' : recordings[currentQuestion] ? '녹음 완료 ✓  다시 녹음하려면 탭하세요' : '마이크 버튼을 눌러 녹음을 시작하세요'}
-          </p>
-
-          {recordings[currentQuestion] && (
-            <div className="flex justify-center mb-4">
-              <audio controls src={URL.createObjectURL(recordings[currentQuestion])} className="w-full max-w-xs" />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-toss-gray100 px-4 py-4">
-        <div className="max-w-2xl mx-auto">
-          <Button
-            fullWidth size="lg"
-            onClick={isLastQuestion ? handleSubmit : handleNext}
-            loading={submitting}
-          >
-            {isLastQuestion ? '시험 제출하기' : '다음 문제'}
-            {!isLastQuestion && <Icon icon="solar:arrow-right-linear" className="text-xl ml-2" />}
+      <div className="flex gap-3">
+        <SaveButton setId={examId} initialSaved={isSaved} />
+        <Link href="/exam" className="flex-1">
+          <Button fullWidth>
+            <Icon icon="solar:magic-stick-bold" className="mr-2" />
+            새 문제 생성
           </Button>
-        </div>
+        </Link>
       </div>
-
-      {/* Difficulty 2 Modal */}
-      <Modal open={showDifficultyModal} onClose={() => {}}>
-        <div className="text-center">
-          <h2 className="text-lg font-bold mb-2">2차 난이도를 선택하세요</h2>
-          <p className="text-sm text-toss-gray600 mb-6">1차 세션이 완료되었습니다. 2차 세션 난이도를 선택하세요.</p>
-          <div className="grid grid-cols-3 gap-2 mb-6">
-            {[1,2,3,4,5,6].map(d => (
-              <button key={d} onClick={() => setSelectedDifficulty2(d)}
-                className={`py-3 rounded-xl font-bold text-sm transition-all ${selectedDifficulty2 === d ? 'bg-toss-blue text-white' : 'bg-toss-gray50 text-toss-gray700 hover:bg-toss-gray100'}`}>
-                {d}단계
-              </button>
-            ))}
-          </div>
-          <Button fullWidth onClick={handleDifficulty2Submit}>2차 세션 시작</Button>
-        </div>
-      </Modal>
-
-      {/* Exit Modal */}
-      <Modal open={exitModal} onClose={() => setExitModal(false)} title="시험 나가기">
-        <p className="text-sm text-toss-gray600 mb-6">시험에서 나가면 현재 진행 상황이 저장되지 않습니다. 그래도 나가시겠습니까?</p>
-        <div className="flex gap-3">
-          <Button variant="secondary" fullWidth onClick={() => setExitModal(false)}>아니오</Button>
-          <Button variant="danger" fullWidth onClick={() => router.push('/exam')}>예, 나가겠습니다</Button>
-        </div>
-      </Modal>
     </div>
   )
 }

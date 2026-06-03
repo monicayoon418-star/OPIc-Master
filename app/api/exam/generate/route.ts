@@ -21,17 +21,16 @@ export async function POST(req: NextRequest) {
     actualQuestions,
   })
 
-  const exam = await prisma.exam.create({
+  const generatedSet = await prisma.generatedSet.create({
     data: {
       userId: session.user.id,
       difficulty1,
       difficulty2: difficulty2 ?? null,
-      targetLevel,
+      targetLevel: targetLevel ?? 'IH',
       keywords,
       questions: questions.map((q, i) => ({ ...q, id: `q_${i}` })),
-      status: 'SETUP',
     },
   })
 
-  return NextResponse.json({ examId: exam.id, questions })
+  return NextResponse.json({ setId: generatedSet.id, questions })
 }

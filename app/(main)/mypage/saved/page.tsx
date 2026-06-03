@@ -40,7 +40,7 @@ export default async function SavedPage() {
                   <Icon icon="solar:chat-round-bold-duotone" className="text-xl text-toss-blue flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-toss-dark truncate">{item.post.title}</p>
-                    <p className="text-xs text-toss-gray500">{item.post.type === 'REVIEW' ? '후기' : '공부법'} · {formatDate(item.post.createdAt.toISOString())}</p>
+                    <p className="text-xs text-toss-gray500">{item.post.type === 'REVIEW' ? '오픽 후기' : '공부법 후기'} · {formatDate(item.post.createdAt.toISOString())}</p>
                   </div>
                   <Icon icon="solar:arrow-right-linear" className="text-toss-gray400 flex-shrink-0" />
                 </Link>

@@ -10,7 +10,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   const [users, total] = await Promise.all([
     prisma.user.findMany({
       where: { deletedAt: null },
-      include: { _count: { select: { exams: true, posts: true } } },
+      include: { _count: { select: { generatedSets: true, posts: true } } },
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -51,7 +51,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                 </td>
                 <td className="px-4 py-3 text-toss-gray600">{user.email ?? '-'}</td>
                 <td className="px-4 py-3 text-toss-gray600">{user.job ? JOB_LABELS[user.job] : '-'}</td>
-                <td className="px-4 py-3 text-center text-toss-gray700">{user._count.exams}</td>
+                <td className="px-4 py-3 text-center text-toss-gray700">{user._count.generatedSets}</td>
                 <td className="px-4 py-3 text-center text-toss-gray700">{user._count.posts}</td>
                 <td className="px-4 py-3 text-toss-gray500">{formatDate(user.createdAt.toISOString())}</td>
                 <td className="px-4 py-3">

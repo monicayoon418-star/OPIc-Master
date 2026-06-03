@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const type = searchParams.get('type') as 'REVIEW' | 'TIP' | null
+  const type = searchParams.get('type') as 'REVIEW' | 'STUDY' | null
   const page = Number(searchParams.get('page') ?? 1)
   const pageSize = 20
 

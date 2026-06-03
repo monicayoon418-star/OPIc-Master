@@ -11,7 +11,7 @@ export default async function StudyTipDetailPage({ params }: { params: Promise<{
   const session = await auth()
 
   const post = await prisma.post.findUnique({
-    where: { id, type: 'TIP', deletedAt: null },
+    where: { id, type: 'STUDY', deletedAt: null },
     include: {
       user: { select: { id: true, nickname: true } },
       comments: {

@@ -21,7 +21,7 @@ enum Job {
 
 enum PostType {
   REVIEW
-  TIP
+  STUDY
 }
 
 enum RequestStatus {
@@ -41,13 +41,13 @@ model User {
   createdAt DateTime  @default(now())
   deletedAt DateTime?
 
-  exams      Exam[]
-  posts      Post[]
-  comments   Comment[]
-  savedItems SavedItem[]
-  requests   Request[]
-  reports    Report[]    @relation("reporter")
-  reported   Report[]    @relation("reported")
+  generatedSets GeneratedSet[]
+  posts         Post[]
+  comments      Comment[]
+  savedItems    SavedItem[]
+  requests      Request[]
+  reports       Report[]       @relation("reporter")
+  reported      Report[]       @relation("reported")
 }
 
 model ExamGenerationCriteria {
@@ -67,34 +67,18 @@ model Question {
   updatedAt  DateTime @updatedAt
 }
 
-model Exam {
-  id          String    @id @default(cuid())
+model GeneratedSet {
+  id          String   @id @default(cuid())
   userId      String
-  user        User      @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
   difficulty1 Int
   difficulty2 Int?
-  targetLevel String?
+  targetLevel String
   keywords    Json
-  questions   Json      @default("[]")
-  status      String    @default("SETUP")
-  startedAt   DateTime?
-  endedAt     DateTime?
-  createdAt   DateTime  @default(now())
+  questions   Json     @default("[]")
+  createdAt   DateTime @default(now())
 
-  answers ExamAnswer[]
   savedBy SavedItem[]
-}
-
-model ExamAnswer {
-  id            String   @id @default(cuid())
-  examId        String
-  exam          Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
-  questionIndex Int
-  audioKey      String?
-  duration      Int?
-  createdAt     DateTime @default(now())
-
-  @@unique([examId, questionIndex])
 }
 
 model Post {
@@ -142,19 +126,20 @@ model Resource {
 }
 
 model SavedItem {
-  id         String    @id @default(cuid())
-  userId     String
-  user       User      @relation(fields: [userId], references: [id])
-  postId     String?
-  post       Post?     @relation(fields: [postId], references: [id])
-  resourceId String?
-  resource   Resource? @relation(fields: [resourceId], references: [id])
-  examId     String?
-  exam       Exam?     @relation(fields: [examId], references: [id])
-  createdAt  DateTime  @default(now())
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  postId         String?
+  post           Post?         @relation(fields: [postId], references: [id])
+  resourceId     String?
+  resource       Resource?     @relation(fields: [resourceId], references: [id])
+  generatedSetId String?
+  generatedSet   GeneratedSet? @relation(fields: [generatedSetId], references: [id])
+  createdAt      DateTime      @default(now())
 
   @@unique([userId, postId])
   @@unique([userId, resourceId])
+  @@unique([userId, generatedSetId])
 }
 
 model Request {

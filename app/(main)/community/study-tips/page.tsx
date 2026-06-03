@@ -12,13 +12,13 @@ export default async function StudyTipsPage({ searchParams }: { searchParams: Pr
 
   const [posts, total] = await Promise.all([
     prisma.post.findMany({
-      where: { type: 'TIP', deletedAt: null },
+      where: { type: 'STUDY', deletedAt: null },
       include: { user: { select: { id: true, nickname: true } }, _count: { select: { comments: true } } },
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.post.count({ where: { type: 'TIP', deletedAt: null } }),
+    prisma.post.count({ where: { type: 'STUDY', deletedAt: null } }),
   ])
 
   return (

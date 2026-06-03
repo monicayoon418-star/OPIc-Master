@@ -12,14 +12,15 @@ export default async function MyPage() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
-      _count: { select: { exams: true, posts: true, savedItems: true } },
+      _count: { select: { generatedSets: true, posts: true, savedItems: true } },
     },
   })
 
   if (!user) redirect('/login')
 
-  const recentExams = await prisma.exam.findMany({
-    where: { userId: user.id, status: 'COMPLETED' },
+  const recentSavedSets = await prisma.savedItem.findMany({
+    where: { userId: user.id, generatedSetId: { not: null } },
+    include: { generatedSet: true },
     orderBy: { createdAt: 'desc' },
     take: 3,
   })
@@ -41,13 +42,17 @@ export default async function MyPage() {
           <div>
             <p className="text-lg font-bold text-toss-dark">{user.nickname}</p>
             <p className="text-sm text-toss-gray500">{user.email ?? '카카오 로그인'}</p>
-            {user.job && <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-medium">{JOB_LABELS[user.job]}</span>}
+            {user.job && (
+              <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-medium">
+                {JOB_LABELS[user.job]}
+              </span>
+            )}
           </div>
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-xl font-bold text-toss-dark">{user._count.exams}</p>
-            <p className="text-xs text-toss-gray500">응시한 시험</p>
+            <p className="text-xl font-bold text-toss-dark">{user._count.generatedSets}</p>
+            <p className="text-xs text-toss-gray500">생성한 문제 세트</p>
           </div>
           <div>
             <p className="text-xl font-bold text-toss-dark">{user._count.posts}</p>
@@ -55,7 +60,7 @@ export default async function MyPage() {
           </div>
           <div>
             <p className="text-xl font-bold text-toss-dark">{user._count.savedItems}</p>
-            <p className="text-xs text-toss-gray500">저장한 글</p>
+            <p className="text-xs text-toss-gray500">저장한 항목</p>
           </div>
         </div>
       </div>
@@ -63,7 +68,7 @@ export default async function MyPage() {
       {/* Quick Links */}
       <div className="grid grid-cols-2 gap-3 mb-6">
         {[
-          { href: '/mypage/history', icon: 'solar:history-bold-duotone', label: '시험 내역', color: 'text-toss-blue' },
+          { href: '/mypage/history', icon: 'solar:document-bold-duotone', label: '저장한 문제 세트', color: 'text-toss-blue' },
           { href: '/mypage/saved', icon: 'solar:bookmark-bold-duotone', label: '저장한 글', color: 'text-toss-green' },
           { href: '/mypage/requests', icon: 'solar:chat-square-bold-duotone', label: '요청사항', color: 'text-purple-500' },
           { href: '/mypage/account', icon: 'solar:settings-bold-duotone', label: '계정 설정', color: 'text-toss-gray600' },
@@ -76,26 +81,29 @@ export default async function MyPage() {
         ))}
       </div>
 
-      {/* Recent Exams */}
-      {recentExams.length > 0 && (
+      {/* Recent Saved Sets */}
+      {recentSavedSets.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-toss-dark">최근 시험</h2>
+            <h2 className="font-bold text-toss-dark">최근 저장한 문제 세트</h2>
             <Link href="/mypage/history" className="text-sm text-toss-blue hover:underline">전체 보기</Link>
           </div>
           <div className="space-y-2">
-            {recentExams.map(exam => (
-              <Link key={exam.id} href={`/exam/result/${exam.id}`} className="flex items-center justify-between p-4 bg-white border border-toss-gray100 rounded-2xl hover:border-toss-blue/20 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Icon icon="solar:document-bold-duotone" className="text-xl text-toss-blue" />
-                  <div>
-                    <p className="text-sm font-semibold text-toss-dark">난이도 {exam.difficulty1}단계 모의고사</p>
-                    <p className="text-xs text-toss-gray500">{formatDate(exam.createdAt.toISOString())}</p>
+            {recentSavedSets.map(item => {
+              const set = item.generatedSet!
+              return (
+                <Link key={item.id} href={`/exam/${set.id}`} className="flex items-center justify-between p-4 bg-white border border-toss-gray100 rounded-2xl hover:border-toss-blue/20 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Icon icon="solar:document-bold-duotone" className="text-xl text-toss-blue" />
+                    <div>
+                      <p className="text-sm font-semibold text-toss-dark">난이도 {set.difficulty1}단계 · 목표 {set.targetLevel}</p>
+                      <p className="text-xs text-toss-gray500">{formatDate(set.createdAt.toISOString())}</p>
+                    </div>
                   </div>
-                </div>
-                <Icon icon="solar:arrow-right-linear" className="text-toss-gray400" />
-              </Link>
-            ))}
+                  <Icon icon="solar:arrow-right-linear" className="text-toss-gray400" />
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

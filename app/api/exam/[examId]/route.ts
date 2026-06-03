@@ -7,8 +7,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ exa
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const exam = await prisma.exam.findUnique({ where: { id: examId } })
-  if (!exam || exam.userId !== session.user.id) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  const set = await prisma.generatedSet.findUnique({ where: { id: examId } })
+  if (!set || set.userId !== session.user.id) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  return NextResponse.json(exam)
+  return NextResponse.json(set)
 }

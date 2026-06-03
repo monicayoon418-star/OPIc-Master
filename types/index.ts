@@ -1,8 +1,7 @@
 export type Role = 'USER' | 'ADMIN'
 export type Job = 'STUDENT' | 'GRADUATE_STUDENT' | 'JOB_SEEKER' | 'EMPLOYEE'
-export type PostType = 'REVIEW' | 'TIP'
+export type PostType = 'REVIEW' | 'STUDY'
 export type RequestStatus = 'PENDING' | 'ANSWERED'
-export type ExamStatus = 'SETUP' | 'SESSION1' | 'DIFFICULTY_CHECK' | 'SESSION2' | 'COMPLETED'
 
 export interface User {
   id: string
@@ -31,28 +30,15 @@ export interface ExamKeywords {
   vacation?: string[]
 }
 
-export interface Exam {
+export interface GeneratedSet {
   id: string
   userId: string
   difficulty1: number
   difficulty2?: number | null
-  targetLevel?: string | null
+  targetLevel: string
   keywords: ExamKeywords
   questions: ExamQuestion[]
-  status: ExamStatus
-  startedAt?: string | null
-  endedAt?: string | null
   createdAt: string
-  answers?: ExamAnswer[]
-}
-
-export interface ExamAnswer {
-  id: string
-  examId: string
-  questionIndex: number
-  audioKey?: string | null
-  audioUrl?: string | null
-  duration?: number | null
 }
 
 export interface Post {
@@ -105,7 +91,7 @@ export interface AdminStats {
   weeklySignups: { date: string; count: number }[]
   monthlySignups: { date: string; count: number }[]
   totalUsers: number
-  totalExams: number
+  totalGeneratedSets: number
 }
 
 export interface PaginatedResponse<T> {

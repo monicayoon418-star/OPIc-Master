@@ -3,9 +3,9 @@ import { Icon } from '@iconify/react'
 import StatsChart from '@/components/admin/StatsChart'
 
 async function getStats() {
-  const [totalUsers, totalExams, totalPosts, pendingRequests] = await Promise.all([
+  const [totalUsers, totalGeneratedSets, totalPosts, pendingRequests] = await Promise.all([
     prisma.user.count({ where: { deletedAt: null } }),
-    prisma.exam.count({ where: { status: 'COMPLETED' } }),
+    prisma.generatedSet.count(),
     prisma.post.count({ where: { deletedAt: null } }),
     prisma.request.count({ where: { status: 'PENDING' } }),
   ])
@@ -22,7 +22,7 @@ async function getStats() {
     })
   )
 
-  return { totalUsers, totalExams, totalPosts, pendingRequests, dailyData }
+  return { totalUsers, totalGeneratedSets, totalPosts, pendingRequests, dailyData }
 }
 
 export default async function AdminDashboard() {
@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         {[
           { icon: 'solar:users-group-rounded-bold-duotone', color: 'text-toss-blue bg-toss-blueLight', label: '전체 사용자', value: stats.totalUsers.toLocaleString() },
-          { icon: 'solar:document-bold-duotone', color: 'text-toss-green bg-green-100', label: '완료된 시험', value: stats.totalExams.toLocaleString() },
+          { icon: 'solar:document-bold-duotone', color: 'text-toss-green bg-green-100', label: '생성된 문제 세트', value: stats.totalGeneratedSets.toLocaleString() },
           { icon: 'solar:chat-square-bold-duotone', color: 'text-purple-500 bg-purple-100', label: '총 게시글', value: stats.totalPosts.toLocaleString() },
           { icon: 'solar:letter-bold-duotone', color: 'text-toss-yellow bg-yellow-100', label: '미처리 요청', value: stats.pendingRequests.toString() },
         ].map((item, i) => (
