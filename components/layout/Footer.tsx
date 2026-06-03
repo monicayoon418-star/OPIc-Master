@@ -15,9 +15,6 @@ export default function Footer() {
               </div>
               <span className="font-bold text-toss-gray800">OPIc Master</span>
             </div>
-            <p className="text-sm text-toss-gray500 keep-all max-w-xs">
-              AI를 활용한 유사 기출문제로 나만의 OPIc 예상 문제를 생성하세요.
-            </p>
           </div>
 
           {/* 서비스 */}
