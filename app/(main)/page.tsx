@@ -42,6 +42,22 @@ export default function LandingPage() {
       <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-white overflow-hidden px-4">
         <BouncingSpheres />
 
+        {/* 텍스트 뒤 고정 구 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '50%',
+            top: '50%',
+            width: '500px',
+            height: '500px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 50% 50%, #a5b4fc 0%, #a5b4fc99 30%, #a5b4fc33 60%, transparent 78%)',
+            filter: 'blur(60px)',
+            zIndex: 0,
+            animation: 'blob-undulate 7s ease-in-out infinite',
+          }}
+        />
+
         {/* 중앙 콘텐츠 */}
         <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
 
