@@ -1,32 +1,30 @@
 export default function GlassOverlay() {
-  const stripes = [
-    { left: '-1%',  width: '20%', opacity: 0.18, blur: 10 },
-    { left: '17%',  width: '16%', opacity: 0.11, blur: 14 },
-    { left: '31%',  width: '20%', opacity: 0.15, blur: 10 },
-    { left: '49%',  width: '15%', opacity: 0.09, blur: 16 },
-    { left: '62%',  width: '21%', opacity: 0.16, blur: 10 },
-    { left: '81%',  width: '22%', opacity: 0.13, blur: 12 },
+  // 각 인덱스별 blur 값 — 짝수(굴곡 정점)는 강한 blur, 홀수(골)는 약한 blur
+  const blurValues = [
+    15, 2, 18, 1, 16, 2, 20, 1, 15, 3,
+    17, 1, 19, 2, 16, 1, 18, 2, 14, 3,
+    17, 1, 16, 2,
+  ]
+  const bgOpacities = [
+    0.13, 0.02, 0.15, 0.01, 0.12, 0.02, 0.16, 0.01, 0.13, 0.02,
+    0.14, 0.01, 0.15, 0.02, 0.12, 0.01, 0.14, 0.02, 0.11, 0.02,
+    0.13, 0.01, 0.12, 0.02,
   ]
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
-      {stripes.map((s, i) => (
+    <div
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 1, display: 'flex' }}
+    >
+      {blurValues.map((blur, i) => (
         <div
           key={i}
-          className="absolute top-0 bottom-0"
           style={{
-            left: s.left,
-            width: s.width,
-            backdropFilter: `blur(${s.blur}px)`,
-            WebkitBackdropFilter: `blur(${s.blur}px)`,
-            background: `linear-gradient(
-              90deg,
-              transparent 0%,
-              rgba(255,255,255,${s.opacity}) 30%,
-              rgba(255,255,255,${s.opacity + 0.04}) 50%,
-              rgba(255,255,255,${s.opacity}) 70%,
-              transparent 100%
-            )`,
+            flex: 1,
+            height: '100%',
+            backdropFilter: `blur(${blur}px)`,
+            WebkitBackdropFilter: `blur(${blur}px)`,
+            background: `rgba(255, 255, 255, ${bgOpacities[i]})`,
           }}
         />
       ))}

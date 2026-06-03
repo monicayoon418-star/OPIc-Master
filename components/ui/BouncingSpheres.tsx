@@ -11,21 +11,25 @@ interface SphereState {
 }
 
 const SPHERE_CONFIGS = [
-  { r: 270, color: '#b5d1ff', blur: 70,  opacity: 0.85 },
-  { r: 150, color: '#7ab3ff', blur: 45,  opacity: 0.80 },
-  { r: 120, color: '#3182f6', blur: 20,  opacity: 0.75 },
+  { r: 260, color: '#b5d1ff', blur: 70, opacity: 0.80 },  // 연한 파랑
+  { r: 155, color: '#7ab3ff', blur: 45, opacity: 0.75 },  // 중간 파랑
+  { r: 140, color: '#1D4ED8', blur: 25, opacity: 0.80 },  // 진한 파랑
+  { r: 170, color: '#8B5CF6', blur: 60, opacity: 0.72 },  // 보라
+  { r: 115, color: '#6D28D9', blur: 22, opacity: 0.68 },  // 진한 보라
 ]
 
 const SPEEDS = [
-  { vx: 1.10,  vy: 0.80  },
-  { vx: -1.50, vy: 1.20  },
-  { vx: 1.30,  vy: -1.40 },
+  { vx:  1.10, vy:  0.80 },
+  { vx: -1.50, vy:  1.20 },
+  { vx:  0.90, vy: -1.10 },
+  { vx: -0.80, vy:  1.40 },
+  { vx:  1.20, vy: -0.90 },
 ]
 
 export default function BouncingSpheres() {
   const containerRef = useRef<HTMLDivElement>(null)
   const statesRef   = useRef<SphereState[]>([])
-  const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null])
+  const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null, null, null])
   const rafRef      = useRef<number>(0)
 
   useEffect(() => {
@@ -36,8 +40,8 @@ export default function BouncingSpheres() {
     const ch = container.offsetHeight
 
     statesRef.current = SPHERE_CONFIGS.map((cfg, i) => ({
-      x: cw * (0.18 + i * 0.32),
-      y: ch * (0.30 + i * 0.20),
+      x: cw * (0.15 + i * 0.18),
+      y: ch * (0.20 + i * 0.15),
       vx: SPEEDS[i].vx,
       vy: SPEEDS[i].vy,
       r: cfg.r,
