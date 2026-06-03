@@ -16,7 +16,7 @@ export default function Footer() {
               <span className="font-bold text-toss-gray800">OPIc Master</span>
             </div>
             <p className="text-sm text-toss-gray500 keep-all max-w-xs">
-              실제 기출 문제 데이터 기반으로 나만의 OPIc 예상 문제를 생성하세요.
+              AI를 활용한 유사 기출문제로 나만의 OPIc 예상 문제를 생성하세요.
             </p>
           </div>
 
@@ -41,8 +41,7 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-toss-gray200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-toss-gray400">
           <p>© 2026 OPIc Master. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="#" className="hover:text-toss-gray600">이용약관</Link>
-            <Link href="#" className="hover:text-toss-gray600 font-semibold">개인정보처리방침</Link>
+            <Link href="/privacy" className="hover:text-toss-gray600 font-semibold">개인정보처리방침</Link>
           </div>
         </div>
       </div>

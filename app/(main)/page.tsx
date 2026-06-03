@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/utils'
 
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
-  { step: '02', icon: 'solar:document-bold-duotone', title: '기출 문제 기반 생성', desc: '실제 OPIc 기출 문제 데이터에서 내 키워드에 맞는 문제를 제공합니다.' },
+  { step: '02', icon: 'solar:document-bold-duotone', title: '유사 기출문제 생성', desc: 'AI를 활용한 유사 기출문제를 키워드에 맞게 제공합니다.' },
   { step: '03', icon: 'solar:download-bold-duotone', title: '저장 & 다운로드', desc: '생성된 문제를 마이페이지에 저장하거나 텍스트 파일로 다운로드합니다.' },
 ]
 

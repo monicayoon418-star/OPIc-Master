@@ -13,7 +13,7 @@ export default async function GeneratePage() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-toss-dark mb-3">문제 생성</h1>
         <p className="text-toss-gray600 keep-all">
-          실제 OPIc 기출 문제 데이터를 바탕으로 나의 키워드와 목표 등급에 맞는 예상 문제를 제공합니다.
+          AI를 활용한 유사 기출문제를 바탕으로 나의 키워드와 목표 등급에 맞는 예상 문제를 제공합니다.
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export default async function GeneratePage() {
         {[
           { step: '1', title: '난이도 선택', desc: '1~6단계 중 본인 수준 선택, 목표 등급 설정' },
           { step: '2', title: '키워드 선택', desc: '직업, 취미, 운동 등 12개 이상 선택' },
-          { step: '3', title: '문제 생성', desc: '실제 기출 문제 데이터 기반으로 맞춤 문제 제공' },
+          { step: '3', title: '문제 생성', desc: 'AI를 활용한 유사 기출문제로 맞춤 예상 문제 제공' },
         ].map((item) => (
           <div key={item.step} className="flex items-center gap-4">
             <div className="w-8 h-8 bg-toss-blueLight rounded-full flex items-center justify-center text-toss-blue font-bold text-sm flex-shrink-0">{item.step}</div>

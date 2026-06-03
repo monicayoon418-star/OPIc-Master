@@ -4,9 +4,9 @@ import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/lib/auth'
 
 export const metadata: Metadata = {
-  title: 'OPIc Master | 단기 완성 솔루션',
-  description: '실제 OPIc 시험 환경에서 AI 기반 모의고사를 무료로 체험하세요.',
-  keywords: 'OPIc, 오픽, 영어 말하기, 모의고사, AI 학습',
+  title: 'OPIc Master | AI 유사 기출문제 생성',
+  description: 'AI를 활용한 유사 기출문제로 나만의 OPIc 예상 문제를 무료로 생성하세요.',
+  keywords: 'OPIc, 오픽, 영어 말하기, 예상 문제, AI 유사 기출문제',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
