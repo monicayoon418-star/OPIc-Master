@@ -37,7 +37,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ setId: generatedSet.id, questions })
   } catch (e) {
-    console.error('[generate] error:', e)
-    return NextResponse.json({ error: '문제 생성 중 오류가 발생했습니다.' }, { status: 500 })
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('[generate] error:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

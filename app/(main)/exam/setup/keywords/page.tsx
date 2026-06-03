@@ -93,7 +93,14 @@ export default function KeywordsPage() {
   const totalSelected = [occupation, residence, isStudent].filter(Boolean).length
     + leisure.length + hobbies.length + sports.length + vacation.length
 
-  const canProceed = totalSelected >= 12 && leisure.length >= 2 && hobbies.length >= 1 && sports.length >= 1 && vacation.length >= 1
+  const canProceed = totalSelected >= 12
+    && !!occupation
+    && !!isStudent
+    && !!residence
+    && leisure.length >= 2
+    && hobbies.length >= 1
+    && sports.length >= 1
+    && vacation.length >= 1
 
   const handleNext = () => {
     setKeywords({
@@ -124,13 +131,13 @@ export default function KeywordsPage() {
         <span className="text-sm font-semibold">선택된 키워드: {totalSelected}개 {totalSelected < 12 && '(최소 12개 필요)'}</span>
       </div>
 
-      <RadioGroup label="현재 직업/종사 분야" options={OCCUPATION_OPTIONS} value={occupation} onChange={setOccupation} />
-      <RadioGroup label="현재 학생이신가요?" options={[{ value: '예', label: '예' }, { value: '아니오', label: '아니오' }]} value={isStudent} onChange={setIsStudent} />
-      <RadioGroup label="현재 거주지" options={RESIDENCE_OPTIONS} value={residence} onChange={setResidence} />
+      <RadioGroup label="현재 직업/종사 분야 *" options={OCCUPATION_OPTIONS} value={occupation} onChange={setOccupation} />
+      <RadioGroup label="현재 학생이신가요? *" options={[{ value: '예', label: '예' }, { value: '아니오', label: '아니오' }]} value={isStudent} onChange={setIsStudent} />
+      <RadioGroup label="현재 거주지 *" options={RESIDENCE_OPTIONS} value={residence} onChange={setResidence} />
       <ChipGroup label="여가 활동" options={LEISURE_OPTIONS} selected={leisure} onToggle={v => toggleArr(leisure, setLeisure, v)} minSelect={2} />
-      <ChipGroup label="취미 / 관심사" options={HOBBY_OPTIONS} selected={hobbies} onToggle={v => toggleArr(hobbies, setHobbies, v)} />
-      <ChipGroup label="즐기는 운동" options={SPORT_OPTIONS} selected={sports} onToggle={v => toggleArr(sports, setSports, v)} />
-      <ChipGroup label="휴가 / 출장 경험" options={VACATION_OPTIONS} selected={vacation} onToggle={v => toggleArr(vacation, setVacation, v)} />
+      <ChipGroup label="취미 / 관심사" options={HOBBY_OPTIONS} selected={hobbies} onToggle={v => toggleArr(hobbies, setHobbies, v)} minSelect={1} />
+      <ChipGroup label="즐기는 운동" options={SPORT_OPTIONS} selected={sports} onToggle={v => toggleArr(sports, setSports, v)} minSelect={1} />
+      <ChipGroup label="휴가 / 출장 경험" options={VACATION_OPTIONS} selected={vacation} onToggle={v => toggleArr(vacation, setVacation, v)} minSelect={1} />
 
       <div className="flex gap-3">
         <Button variant="secondary" size="lg" onClick={() => router.back()}>이전</Button>
