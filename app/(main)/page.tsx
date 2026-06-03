@@ -45,14 +45,6 @@ export default function LandingPage() {
         {/* 중앙 콘텐츠 */}
         <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
 
-          {/* 상단 레이블 */}
-          <p
-            className="reveal text-sm font-semibold text-white tracking-wide"
-            style={{ transitionDelay: '0ms', marginBottom: '16px' }}
-          >
-            실제 기출 문제 기반 OPIc 예상 문제 서비스
-          </p>
-
           {/* 메인 타이틀 */}
           <h1
             className="reveal font-semibold text-white leading-[1.1] keep-all"
@@ -64,7 +56,7 @@ export default function LandingPage() {
           {/* 설명글 */}
           <p
             className="reveal leading-relaxed mb-10 keep-all font-normal"
-            style={{ transitionDelay: '160ms', fontSize: '14px', color: 'rgba(255,255,255,0.90)' }}
+            style={{ transitionDelay: '160ms', fontSize: '16px', color: 'rgba(255,255,255,0.90)', fontWeight: 500 }}
           >
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.
