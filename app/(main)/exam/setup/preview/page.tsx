@@ -12,11 +12,13 @@ export default function PreviewPage() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
   const [result, setResult] = useState<{ id: string; questions: { content: string; category: string; session: number }[] } | null>(null)
 
   const handleGenerate = async () => {
     setLoading(true)
     setSaved(false)
+    setError('')
     try {
       const res = await fetch('/api/exam/generate', {
         method: 'POST',
@@ -24,10 +26,16 @@ export default function PreviewPage() {
         body: JSON.stringify({ difficulty1, difficulty2, targetLevel, keywords }),
       })
       const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? '문제 생성에 실패했습니다. 잠시 후 다시 시도해주세요.')
+        return
+      }
       if (data.setId) {
         setGeneratedSetId(data.setId)
         setResult(data)
       }
+    } catch (e) {
+      setError('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
     } finally {
       setLoading(false)
     }
@@ -119,6 +127,13 @@ export default function PreviewPage() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-100 rounded-2xl mb-4">
+          <Icon icon="solar:danger-bold" className="text-toss-red flex-shrink-0" />
+          <p className="text-sm text-toss-red">{error}</p>
         </div>
       )}
 
