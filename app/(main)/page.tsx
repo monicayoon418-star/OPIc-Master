@@ -4,13 +4,6 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 
-const OPIC_STATS = [
-  { icon: 'solar:users-group-rounded-bold-duotone', color: 'text-toss-blue', value: '47,200+', label: '누적 응시자' },
-  { icon: 'solar:diploma-bold-duotone', color: 'text-toss-green', value: '4,800+', label: '기출 문제 DB' },
-  { icon: 'solar:document-bold-duotone', color: 'text-toss-yellow', value: '키워드 기반', label: '맞춤 문제 제공' },
-  { icon: 'solar:shield-check-bold-duotone', color: 'text-purple-500', value: '무료', label: '회원가입 후 이용' },
-]
-
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
   { step: '02', icon: 'solar:document-bold-duotone', title: '기출 문제 기반 생성', desc: '실제 OPIc 기출 문제 데이터에서 내 키워드에 맞는 문제를 제공합니다.' },
@@ -18,20 +11,21 @@ const HOW_IT_WORKS = [
 ]
 
 export default function LandingPage() {
-  const blobWrapRef = useRef<HTMLDivElement>(null)
+  const rightVisualRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // reveal 애니메이션
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('active')),
       { threshold: 0.1 }
     )
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
+    // 우측 비주얼 패럴랙스
     const onScroll = () => {
-      if (!blobWrapRef.current) return
+      if (!rightVisualRef.current) return
       const y = window.scrollY
-      blobWrapRef.current.style.transform = `translateY(${y * 0.35}px)`
-      blobWrapRef.current.style.opacity = String(Math.max(0, 1 - y / 500))
+      rightVisualRef.current.style.transform = `translateY(${y * 0.12}px)`
     }
     window.addEventListener('scroll', onScroll, { passive: true })
 
@@ -41,66 +35,84 @@ export default function LandingPage() {
     }
   }, [])
 
+  const scrollToNext = () => {
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+  }
+
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center text-center px-4 overflow-hidden bg-[#f0f4f8]">
-        <div ref={blobWrapRef} className="absolute inset-0 -z-10 overflow-hidden will-change-transform">
-          <div style={{
-            position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
-            width: '50%', height: '57%', background: '#5a99ff', top: '-25%', right: '-15%',
-            animation: 'blob-float 2s infinite ease-in-out alternate, blob-color-blue 2s infinite ease-in-out alternate',
-          }} />
-          <div style={{
-            position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
-            width: '57%', height: '57%', background: '#b5d1ff', bottom: '-35%', left: '-25%',
-            animation: 'blob-float 2.5s infinite ease-in-out alternate, blob-color-lightblue 2.5s infinite ease-in-out alternate',
-            animationDelay: '-1s, -1s',
-          }} />
-          <div style={{
-            position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
-            width: '43%', height: '50%', background: '#ffffff', top: '15%', left: '18%',
-            animation: 'blob-float 3s infinite ease-in-out alternate, blob-color-white 3s infinite ease-in-out alternate',
-            animationDelay: '-2s, -2s',
-          }} />
-          <svg className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ opacity: 0.45, mixBlendMode: 'overlay' }}
-            xmlns="http://www.w3.org/2000/svg">
-            <filter id="noiseFilter">
-              <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-          </svg>
-          <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, transparent, #ffffff)' }} />
+      <section className="relative min-h-screen -mt-16 flex items-center bg-white overflow-hidden px-4">
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 items-center pt-24 pb-20">
+
+          {/* 왼쪽: 텍스트 + 버튼 */}
+          <div>
+            <p className="reveal text-sm font-semibold text-toss-blue mb-4 tracking-widest uppercase" style={{ transitionDelay: '0ms' }}>
+              OPIc 예상 문제 생성 서비스
+            </p>
+            <h1 className="reveal text-5xl lg:text-6xl font-bold text-toss-dark leading-[1.1] mb-6 keep-all" style={{ transitionDelay: '80ms' }}>
+              실제 기출로<br />준비하는<br />
+              <span className="text-toss-blue">OPIc 학습</span>
+            </h1>
+            <p className="reveal text-base lg:text-lg text-toss-gray600 mb-10 keep-all leading-relaxed max-w-md" style={{ transitionDelay: '160ms' }}>
+              실제 OPIc 기출 문제 데이터를 바탕으로<br />
+              키워드와 목표 등급을 선택하면<br />
+              나만의 맞춤 예상 문제를 즉시 제공합니다.<br />
+              지금 바로 무료로 시작해보세요.
+            </p>
+            <div className="reveal flex flex-col sm:flex-row gap-3 w-full max-w-sm" style={{ transitionDelay: '240ms' }}>
+              <Link
+                href="/exam"
+                className="flex-1 bg-toss-blue hover:bg-toss-blueHover text-white px-8 py-4 rounded-full text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(49,130,246,0.6)] flex items-center justify-center whitespace-nowrap"
+              >
+                모의문제 생성하기
+              </Link>
+              <a
+                href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-white border border-toss-gray200 text-toss-dark px-8 py-4 rounded-full text-base font-bold hover:bg-toss-gray50 transition-all flex items-center justify-center whitespace-nowrap"
+              >
+                오픽 공홈 바로가기
+              </a>
+            </div>
+          </div>
+
+          {/* 오른쪽: 글로우 비주얼 */}
+          <div ref={rightVisualRef} className="relative flex items-center justify-center h-[420px] lg:h-[500px]">
+            {/* 글로우 블롭 레이어들 */}
+            <div className="absolute w-[380px] h-[380px] rounded-full"
+              style={{ background: 'radial-gradient(circle at 40% 50%, #3182f6 0%, #7ab3ff 45%, transparent 70%)', filter: 'blur(48px)', opacity: 0.55 }} />
+            <div className="absolute w-[280px] h-[280px] rounded-full"
+              style={{ background: 'radial-gradient(circle at 60% 40%, #a8c8ff 0%, #3182f6 50%, transparent 75%)', filter: 'blur(36px)', opacity: 0.45, transform: 'translate(40px, -20px)' }} />
+            <div className="absolute w-[200px] h-[200px] rounded-full"
+              style={{ background: 'radial-gradient(circle, #e8f3ff 0%, #7ab3ff 60%, transparent 80%)', filter: 'blur(24px)', opacity: 0.6, transform: 'translate(-30px, 30px)' }} />
+
+            {/* 세로 슬릿 오버레이 (CRUNCHY 스타일) */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-full w-px bg-white/20 mx-8" />
+              ))}
+            </div>
+
+            {/* OPIc Master 텍스트 */}
+            <div className="relative z-10 text-center select-none">
+              <p className="text-4xl lg:text-5xl font-black text-white tracking-tight drop-shadow-[0_2px_24px_rgba(49,130,246,0.8)]">
+                OPIc Master
+              </p>
+              <p className="text-sm text-white/70 mt-2 font-medium tracking-widest">기출 문제 기반 학습</p>
+            </div>
+          </div>
         </div>
 
-        <h1 className="reveal keep-all text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6 max-w-4xl" style={{ transitionDelay: '100ms' }}>
-          실제 기출 문제로 준비하는<br />
-          <span className="text-toss-blue">OPIc 예상 문제</span>
-        </h1>
-
-        <p className="reveal text-lg md:text-xl text-toss-gray600 mb-10 max-w-xl keep-all leading-relaxed" style={{ transitionDelay: '200ms' }}>
-          실제 OPIc 기출 문제 데이터를 바탕으로
-          나의 키워드와 목표 등급에 맞는 예상 문제를 무료로 제공합니다.
-        </p>
-
-        <div className="reveal flex flex-col sm:flex-row gap-3 w-full max-w-sm" style={{ transitionDelay: '300ms' }}>
-          <Link
-            href="/exam"
-            className="flex-1 bg-toss-blue hover:bg-toss-blueHover text-white px-8 py-4 rounded-full text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(49,130,246,0.6)] flex items-center justify-center whitespace-nowrap"
-          >
-            모의문제 생성하기
-          </Link>
-          <a
-            href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 bg-white border border-toss-gray200 text-toss-dark px-8 py-4 rounded-full text-base font-bold hover:bg-toss-gray50 transition-all flex items-center justify-center whitespace-nowrap"
-          >
-            오픽 공홈 바로가기
-          </a>
-        </div>
+        {/* 스크롤 다운 화살표 */}
+        <button
+          onClick={scrollToNext}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors group"
+        >
+          <span className="text-xs font-medium tracking-widest">SCROLL</span>
+          <Icon icon="solar:arrow-down-linear" className="text-xl animate-bounce" />
+        </button>
       </section>
 
       {/* How it works */}
