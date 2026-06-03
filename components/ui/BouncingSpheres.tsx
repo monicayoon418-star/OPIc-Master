@@ -11,12 +11,22 @@ interface SphereState {
 }
 
 const SPHERE_CONFIGS = [
-  { r: 420, color: '#dbeafe', blur: 120, opacity: 0.90 }, // 연한 하늘색 — 배경 베이스
-  { r: 320, color: '#c4b5fd', blur: 90,  opacity: 0.80 }, // 연보라
-  { r: 260, color: '#818cf8', blur: 70,  opacity: 0.75 }, // 인디고
-  { r: 220, color: '#3b82f6', blur: 55,  opacity: 0.80 }, // 진한 파랑
-  { r: 180, color: '#a5b4fc', blur: 60,  opacity: 0.70 }, // 라벤더
-  { r: 240, color: '#7dd3fc', blur: 80,  opacity: 0.78 }, // 하늘색 (추가)
+  { r: 380, color: '#dbeafe', blur: 110, opacity: 0.88 }, // 연한 하늘색
+  { r: 300, color: '#c4b5fd', blur: 85,  opacity: 0.80 }, // 연보라
+  { r: 240, color: '#7dd3fc', blur: 75,  opacity: 0.78 }, // 하늘색
+  { r: 220, color: '#86efac', blur: 70,  opacity: 0.75 }, // 연두색
+  { r: 200, color: '#3b82f6', blur: 55,  opacity: 0.80 }, // 진한 파랑
+  { r: 180, color: '#bbf7d0', blur: 65,  opacity: 0.72 }, // 민트 연두
+]
+
+// 시작 위치: 좌우로 분산 (x: 좌측 0.1~0.4 / 우측 0.6~0.9)
+const INITIAL_POS = [
+  { x: 0.15, y: 0.20 }, // 좌상
+  { x: 0.78, y: 0.15 }, // 우상
+  { x: 0.12, y: 0.70 }, // 좌하
+  { x: 0.80, y: 0.68 }, // 우하
+  { x: 0.30, y: 0.45 }, // 중앙좌
+  { x: 0.68, y: 0.50 }, // 중앙우
 ]
 
 const SPEEDS = [
@@ -42,8 +52,8 @@ export default function BouncingSpheres() {
     const ch = container.offsetHeight
 
     statesRef.current = SPHERE_CONFIGS.map((cfg, i) => ({
-      x: cw * (0.10 + i * 0.20),
-      y: ch * (0.15 + i * 0.18),
+      x: cw * INITIAL_POS[i].x,
+      y: ch * INITIAL_POS[i].y,
       vx: SPEEDS[i].vx,
       vy: SPEEDS[i].vy,
       r: cfg.r,
