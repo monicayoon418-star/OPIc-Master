@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const { content, category, difficulty } = await req.json()
-  const q = await prisma.question.create({ data: { content, category, difficulty } })
+  const { content, category, difficulty, keywords } = await req.json()
+  const q = await prisma.question.create({ data: { content, category, difficulty, keywords: keywords ?? [] } })
   return NextResponse.json(q)
 }
