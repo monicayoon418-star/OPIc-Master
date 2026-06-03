@@ -5,10 +5,19 @@ import { generateExamQuestions } from '@/lib/claude'
 
 export const maxDuration = 60
 
+const FREE_LIMIT = 1
+
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const user = await prisma.user.findUnique({ where: { id: session.user.id } })
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    if (user.aiGenerationCount >= FREE_LIMIT) {
+      return NextResponse.json({ limitReached: true }, { status: 402 })
+    }
 
     const { difficulty1, difficulty2, targetLevel, keywords } = await req.json()
 
@@ -24,16 +33,22 @@ export async function POST(req: NextRequest) {
       actualQuestions,
     })
 
-    const generatedSet = await prisma.generatedSet.create({
-      data: {
-        userId: session.user.id,
-        difficulty1,
-        difficulty2: difficulty2 ?? null,
-        targetLevel: targetLevel ?? 'IH',
-        keywords,
-        questions: questions.map((q, i) => ({ ...q, id: `q_${i}` })),
-      },
-    })
+    const [generatedSet] = await prisma.$transaction([
+      prisma.generatedSet.create({
+        data: {
+          userId: session.user.id,
+          difficulty1,
+          difficulty2: difficulty2 ?? null,
+          targetLevel: targetLevel ?? 'IH',
+          keywords,
+          questions: questions.map((q, i) => ({ ...q, id: `q_${i}` })),
+        },
+      }),
+      prisma.user.update({
+        where: { id: session.user.id },
+        data: { aiGenerationCount: { increment: 1 } },
+      }),
+    ])
 
     return NextResponse.json({ setId: generatedSet.id, questions })
   } catch (e) {
