@@ -5,8 +5,10 @@ export default function Footer() {
   return (
     <footer className="bg-toss-gray50 border-t border-toss-gray200 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-8">
-          <div>
+        <div className="flex flex-col md:flex-row items-start gap-12">
+
+          {/* 로고 + 설명 */}
+          <div className="min-w-[200px]">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-7 h-7 bg-toss-gray300 rounded-lg flex items-center justify-center text-white">
                 <Icon icon="solar:mic-2-bold-duotone" className="text-sm" />
@@ -18,20 +20,22 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex gap-12 text-sm">
-            <div className="space-y-2">
-              <p className="font-semibold text-toss-gray700">서비스</p>
-              <Link href="/guide" className="block text-toss-gray500 hover:text-toss-dark">오픽 가이드</Link>
-              <Link href="/exam" className="block text-toss-gray500 hover:text-toss-dark">문제 생성</Link>
-              <Link href="/community" className="block text-toss-gray500 hover:text-toss-dark">시험 후기</Link>
-              <Link href="/resources" className="block text-toss-gray500 hover:text-toss-dark">오픽 자료</Link>
-            </div>
-            <div className="space-y-2">
-              <p className="font-semibold text-toss-gray700">고객지원</p>
-              <Link href="/mypage/requests" className="block text-toss-gray500 hover:text-toss-dark">요청사항</Link>
-              <Link href="/mypage" className="block text-toss-gray500 hover:text-toss-dark">마이페이지</Link>
-            </div>
+          {/* 서비스 */}
+          <div className="space-y-2 text-sm">
+            <p className="font-semibold text-toss-gray700">서비스</p>
+            <Link href="/guide" className="block text-toss-gray500 hover:text-toss-dark">오픽 가이드</Link>
+            <Link href="/exam" className="block text-toss-gray500 hover:text-toss-dark">문제 생성</Link>
+            <Link href="/community" className="block text-toss-gray500 hover:text-toss-dark">시험 후기</Link>
+            <Link href="/resources" className="block text-toss-gray500 hover:text-toss-dark">오픽 자료</Link>
           </div>
+
+          {/* 고객지원 */}
+          <div className="space-y-2 text-sm">
+            <p className="font-semibold text-toss-gray700">고객지원</p>
+            <Link href="/mypage/requests" className="block text-toss-gray500 hover:text-toss-dark">요청사항</Link>
+            <Link href="/mypage" className="block text-toss-gray500 hover:text-toss-dark">마이페이지</Link>
+          </div>
+
         </div>
 
         <div className="mt-10 pt-6 border-t border-toss-gray200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-toss-gray400">
