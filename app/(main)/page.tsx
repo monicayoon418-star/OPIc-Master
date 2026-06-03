@@ -82,6 +82,15 @@ export default function LandingPage() {
               오픽 공홈 바로가기
             </a>
           </div>
+
+          {/* 면책 고지 */}
+          <p
+            className="reveal text-center keep-all"
+            style={{ transitionDelay: '320ms', fontSize: '11px', color: 'rgba(255,255,255,0.35)', maxWidth: '360px', lineHeight: '1.6' }}
+          >
+            본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.<br />
+            OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
+          </p>
         </div>
 
         {/* 스크롤 화살표 */}
