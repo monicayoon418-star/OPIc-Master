@@ -11,19 +11,19 @@ interface SphereState {
 }
 
 const SPHERE_CONFIGS = [
-  { r: 260, color: '#b5d1ff', blur: 70, opacity: 0.80 },  // 연한 파랑
-  { r: 155, color: '#7ab3ff', blur: 45, opacity: 0.75 },  // 중간 파랑
-  { r: 140, color: '#1D4ED8', blur: 25, opacity: 0.80 },  // 진한 파랑
-  { r: 170, color: '#8B5CF6', blur: 60, opacity: 0.72 },  // 보라
-  { r: 115, color: '#6D28D9', blur: 22, opacity: 0.68 },  // 진한 보라
+  { r: 420, color: '#dbeafe', blur: 120, opacity: 0.90 }, // 연한 하늘색 — 배경 베이스
+  { r: 320, color: '#c4b5fd', blur: 90,  opacity: 0.80 }, // 연보라
+  { r: 260, color: '#818cf8', blur: 70,  opacity: 0.75 }, // 인디고
+  { r: 220, color: '#3b82f6', blur: 55,  opacity: 0.80 }, // 진한 파랑
+  { r: 180, color: '#a5b4fc', blur: 60,  opacity: 0.70 }, // 라벤더
 ]
 
 const SPEEDS = [
-  { vx:  1.10, vy:  0.80 },
-  { vx: -1.50, vy:  1.20 },
-  { vx:  0.90, vy: -1.10 },
-  { vx: -0.80, vy:  1.40 },
-  { vx:  1.20, vy: -0.90 },
+  { vx:  0.60, vy:  0.45 },
+  { vx: -0.90, vy:  0.70 },
+  { vx:  0.75, vy: -0.80 },
+  { vx: -0.65, vy:  0.90 },
+  { vx:  0.85, vy: -0.55 },
 ]
 
 export default function BouncingSpheres() {
@@ -40,8 +40,8 @@ export default function BouncingSpheres() {
     const ch = container.offsetHeight
 
     statesRef.current = SPHERE_CONFIGS.map((cfg, i) => ({
-      x: cw * (0.15 + i * 0.18),
-      y: ch * (0.20 + i * 0.15),
+      x: cw * (0.10 + i * 0.20),
+      y: ch * (0.15 + i * 0.18),
       vx: SPEEDS[i].vx,
       vy: SPEEDS[i].vy,
       r: cfg.r,
@@ -82,7 +82,7 @@ export default function BouncingSpheres() {
             width:        cfg.r * 2,
             height:       cfg.r * 2,
             borderRadius: '50%',
-            background:   `radial-gradient(circle at 50% 50%, ${cfg.color} 0%, ${cfg.color}bb 30%, ${cfg.color}44 60%, transparent 80%)`,
+            background:   `radial-gradient(circle at 50% 50%, ${cfg.color} 0%, ${cfg.color}cc 25%, ${cfg.color}55 55%, transparent 75%)`,
             filter:       `blur(${cfg.blur}px)`,
             opacity:      cfg.opacity,
           }}
