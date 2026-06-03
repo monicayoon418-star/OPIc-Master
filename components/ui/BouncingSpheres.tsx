@@ -11,16 +11,22 @@ interface SphereState {
 }
 
 const SPHERE_CONFIGS = [
-  { r: 220, color: '#3182f6' },
-  { r: 180, color: '#7ab3ff' },
-  { r: 150, color: '#a8c8ff' },
+  { r: 260, color: '#a8c8ff', blur: 80, opacity: 0.75 },
+  { r: 160, color: '#7ab3ff', blur: 60, opacity: 0.70 },
+  { r: 140, color: '#3182f6', blur: 50, opacity: 0.65 },
+]
+
+const SPEEDS = [
+  { vx: 0.7,  vy: 0.5  },
+  { vx: -0.9, vy: 0.75 },
+  { vx: 0.55, vy: -0.8 },
 ]
 
 export default function BouncingSpheres() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const statesRef = useRef<SphereState[]>([])
-  const domsRef = useRef<(HTMLDivElement | null)[]>([null, null, null])
-  const rafRef = useRef<number>(0)
+  const statesRef   = useRef<SphereState[]>([])
+  const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null])
+  const rafRef      = useRef<number>(0)
 
   useEffect(() => {
     const container = containerRef.current
@@ -30,10 +36,10 @@ export default function BouncingSpheres() {
     const ch = container.offsetHeight
 
     statesRef.current = SPHERE_CONFIGS.map((cfg, i) => ({
-      x: cw * (0.2 + i * 0.3),
-      y: ch * (0.2 + i * 0.25),
-      vx: (0.8 + i * 0.3) * (i % 2 === 0 ? 1 : -1),
-      vy: (0.6 + i * 0.25) * (i % 2 === 0 ? 1 : -1),
+      x: cw * (0.2 + i * 0.28),
+      y: ch * (0.25 + i * 0.22),
+      vx: SPEEDS[i].vx,
+      vy: SPEEDS[i].vy,
       r: cfg.r,
     }))
 
@@ -45,10 +51,10 @@ export default function BouncingSpheres() {
         s.x += s.vx
         s.y += s.vy
 
-        if (s.x - s.r < 0)  { s.x = s.r;     s.vx =  Math.abs(s.vx) }
-        if (s.x + s.r > w)  { s.x = w - s.r;  s.vx = -Math.abs(s.vx) }
-        if (s.y - s.r < 0)  { s.y = s.r;     s.vy =  Math.abs(s.vy) }
-        if (s.y + s.r > h)  { s.y = h - s.r;  s.vy = -Math.abs(s.vy) }
+        if (s.x - s.r < 0)  { s.x = s.r;    s.vx =  Math.abs(s.vx) }
+        if (s.x + s.r > w)  { s.x = w - s.r; s.vx = -Math.abs(s.vx) }
+        if (s.y - s.r < 0)  { s.y = s.r;    s.vy =  Math.abs(s.vy) }
+        if (s.y + s.r > h)  { s.y = h - s.r; s.vy = -Math.abs(s.vy) }
 
         const el = domsRef.current[i]
         if (el) el.style.transform = `translate(${s.x - s.r}px, ${s.y - s.r}px)`
@@ -58,7 +64,7 @@ export default function BouncingSpheres() {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+    return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
   return (
@@ -69,21 +75,12 @@ export default function BouncingSpheres() {
           ref={el => { domsRef.current[i] = el }}
           className="absolute will-change-transform"
           style={{
-            width: cfg.r * 2,
+            width:  cfg.r * 2,
             height: cfg.r * 2,
             borderRadius: '50%',
-            background: [
-              'radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.0) 40%)',
-              `radial-gradient(circle at 50% 50%, ${cfg.color}55 0%, ${cfg.color}22 55%, transparent 75%)`,
-            ].join(', '),
-            backdropFilter: 'blur(6px)',
-            WebkitBackdropFilter: 'blur(6px)',
-            border: '1px solid rgba(255,255,255,0.45)',
-            boxShadow: [
-              `0 12px 48px ${cfg.color}33`,
-              `inset 0 1px 0 rgba(255,255,255,0.7)`,
-              `inset 0 -2px 8px rgba(255,255,255,0.1)`,
-            ].join(', '),
+            background: `radial-gradient(circle at 50% 50%, ${cfg.color} 0%, ${cfg.color}99 35%, ${cfg.color}33 65%, transparent 80%)`,
+            filter: `blur(${cfg.blur}px)`,
+            opacity: cfg.opacity,
           }}
         />
       ))}
