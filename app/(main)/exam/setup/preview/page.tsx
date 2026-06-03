@@ -5,36 +5,27 @@ import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react'
 import { useExamStore } from '@/store/examStore'
 import Button from '@/components/ui/Button'
-import Modal from '@/components/ui/Modal'
 
 export default function PreviewPage() {
   const router = useRouter()
   const { difficulty1, difficulty2, targetLevel, keywords, setGeneratedSetId } = useExamStore()
   const [loading, setLoading] = useState(false)
-  const [basicLoading, setBasicLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
-  const [showLimitModal, setShowLimitModal] = useState(false)
-  const [result, setResult] = useState<{ id: string; questions: { content: string; category: string; session: number }[]; isBasic?: boolean } | null>(null)
-
-  const payload = { difficulty1, difficulty2, targetLevel, keywords }
+  const [result, setResult] = useState<{ id: string; questions: { content: string; category: string; session: number }[] } | null>(null)
 
   const handleGenerate = async () => {
     setLoading(true)
     setSaved(false)
     setError('')
     try {
-      const res = await fetch('/api/exam/generate', {
+      const res = await fetch('/api/exam/generate-basic', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ difficulty1, difficulty2, targetLevel, keywords }),
       })
       const data = await res.json()
-      if (res.status === 402 && data.limitReached) {
-        setShowLimitModal(true)
-        return
-      }
       if (!res.ok) {
         setError(data.error ?? '문제 생성에 실패했습니다.')
         return
@@ -45,30 +36,6 @@ export default function PreviewPage() {
       setError(`오류: ${e instanceof Error ? e.message : String(e)}`)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleBasicGenerate = async () => {
-    setShowLimitModal(false)
-    setBasicLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/exam/generate-basic', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.error ?? '문제 생성에 실패했습니다.')
-        return
-      }
-      setGeneratedSetId(data.setId)
-      setResult(data)
-    } catch (e) {
-      setError(`오류: ${e instanceof Error ? e.message : String(e)}`)
-    } finally {
-      setBasicLoading(false)
     }
   }
 
@@ -115,7 +82,7 @@ export default function PreviewPage() {
       </div>
       <p className="text-sm font-semibold text-toss-blue mb-2">3단계 / 3단계</p>
       <h1 className="text-2xl font-bold text-toss-dark mb-2">설정 확인 및 문제 생성</h1>
-      <p className="text-toss-gray600 mb-8">선택한 설정을 확인하고 AI 문제를 생성하세요.</p>
+      <p className="text-toss-gray600 mb-8">선택한 설정을 확인하고 문제를 생성하세요.</p>
 
       {/* Settings Summary */}
       <div className="bg-toss-gray50 rounded-3xl p-6 mb-6 space-y-4">
@@ -143,15 +110,7 @@ export default function PreviewPage() {
       {/* Generated Questions */}
       {result && (
         <div className="border border-toss-gray100 rounded-3xl p-6 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="font-bold text-toss-dark">생성된 문제 ({result.questions.length}개)</h2>
-            {result.isBasic && (
-              <span className="text-xs px-2.5 py-1 bg-toss-gray100 text-toss-gray600 rounded-full font-semibold">기출 기반</span>
-            )}
-            {!result.isBasic && (
-              <span className="text-xs px-2.5 py-1 bg-toss-blueLight text-toss-blue rounded-full font-semibold">AI 생성</span>
-            )}
-          </div>
+          <h2 className="font-bold text-toss-dark mb-4">생성된 문제 ({result.questions.length}개)</h2>
           <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
             {result.questions.map((q, i) => (
               <div key={i} className="p-3 bg-toss-gray50 rounded-xl">
@@ -176,9 +135,9 @@ export default function PreviewPage() {
 
       <div className="flex flex-col gap-3">
         {!result ? (
-          <Button size="lg" fullWidth loading={loading || basicLoading} onClick={handleGenerate}>
-            <Icon icon="solar:magic-stick-bold" className="text-xl mr-2" />
-            AI 문제 생성하기
+          <Button size="lg" fullWidth loading={loading} onClick={handleGenerate}>
+            <Icon icon="solar:document-bold" className="text-xl mr-2" />
+            문제 생성하기
           </Button>
         ) : (
           <>
@@ -201,34 +160,6 @@ export default function PreviewPage() {
         )}
         <Button variant="ghost" onClick={() => router.back()}>이전으로</Button>
       </div>
-
-      {/* 횟수 초과 모달 */}
-      <Modal open={showLimitModal} onClose={() => setShowLimitModal(false)}>
-        <div className="text-center">
-          <div className="w-14 h-14 bg-toss-blueLight rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icon icon="solar:magic-stick-bold-duotone" className="text-2xl text-toss-blue" />
-          </div>
-          <h2 className="text-lg font-bold text-toss-dark mb-2">무료 AI 생성 횟수를 모두 사용했습니다</h2>
-          <p className="text-sm text-toss-gray600 mb-6 keep-all">
-            기출 문제 기반으로 무료로 문제를 받거나,<br />
-            크레딧을 결제해 AI 생성을 계속 이용할 수 있습니다.
-          </p>
-          <div className="flex flex-col gap-3">
-            <Button fullWidth loading={basicLoading} onClick={handleBasicGenerate}>
-              <Icon icon="solar:document-bold" className="text-xl mr-2" />
-              기출 문제 기반으로 무료 받기
-            </Button>
-            <Button
-              variant="secondary"
-              fullWidth
-              onClick={() => { setShowLimitModal(false); router.push('/pricing') }}
-            >
-              <Icon icon="solar:card-bold" className="text-xl mr-2" />
-              유료 결제하기
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   )
 }

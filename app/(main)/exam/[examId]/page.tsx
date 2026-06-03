@@ -23,8 +23,8 @@ export default async function GeneratedSetPage({ params }: { params: Promise<{ e
   if (!set || set.userId !== session.user.id) notFound()
 
   const questions = set.questions as unknown as ExamQuestion[]
-  const session1 = questions.filter(q => q.session === 1)
-  const session2 = questions.filter(q => q.session === 2)
+  const session1 = questions.filter((q: ExamQuestion) => q.session === 1)
+  const session2 = questions.filter((q: ExamQuestion) => q.session === 2)
   const isSaved = set.savedBy.length > 0
 
   return (

@@ -7,13 +7,13 @@ import { Icon } from '@iconify/react'
 const OPIC_STATS = [
   { icon: 'solar:users-group-rounded-bold-duotone', color: 'text-toss-blue', value: '47,200+', label: '누적 응시자' },
   { icon: 'solar:diploma-bold-duotone', color: 'text-toss-green', value: '4,800+', label: '기출 문제 DB' },
-  { icon: 'solar:bolt-bold-duotone', color: 'text-toss-yellow', value: 'AI 기반', label: '맞춤 문제 생성' },
+  { icon: 'solar:document-bold-duotone', color: 'text-toss-yellow', value: '키워드 기반', label: '맞춤 문제 제공' },
   { icon: 'solar:shield-check-bold-duotone', color: 'text-purple-500', value: '무료', label: '회원가입 후 이용' },
 ]
 
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
-  { step: '02', icon: 'solar:magic-stick-bold-duotone', title: 'AI 맞춤 문제 생성', desc: '기출 문제 데이터를 기반으로 AI가 나만의 예상 문제를 즉시 생성합니다.' },
+  { step: '02', icon: 'solar:document-bold-duotone', title: '기출 문제 기반 생성', desc: '실제 OPIc 기출 문제 데이터에서 내 키워드에 맞는 문제를 제공합니다.' },
   { step: '03', icon: 'solar:download-bold-duotone', title: '저장 & 다운로드', desc: '생성된 문제를 마이페이지에 저장하거나 텍스트 파일로 다운로드합니다.' },
 ]
 
@@ -21,14 +21,12 @@ export default function LandingPage() {
   const blobWrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // reveal 애니메이션
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('active')),
       { threshold: 0.1 }
     )
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 
-    // 스크롤 패럴랙스
     const onScroll = () => {
       if (!blobWrapRef.current) return
       const y = window.scrollY
@@ -47,29 +45,24 @@ export default function LandingPage() {
     <>
       {/* Hero */}
       <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center text-center px-4 overflow-hidden bg-[#f0f4f8]">
-        {/* Blob background */}
         <div ref={blobWrapRef} className="absolute inset-0 -z-10 overflow-hidden will-change-transform">
-          {/* 상단 우측 진한 파란색 */}
           <div style={{
             position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
             width: '50%', height: '57%', background: '#5a99ff', top: '-25%', right: '-15%',
             animation: 'blob-float 2s infinite ease-in-out alternate, blob-color-blue 2s infinite ease-in-out alternate',
           }} />
-          {/* 좌측 하단 연한 파란색 */}
           <div style={{
             position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
             width: '57%', height: '57%', background: '#b5d1ff', bottom: '-35%', left: '-25%',
             animation: 'blob-float 2.5s infinite ease-in-out alternate, blob-color-lightblue 2.5s infinite ease-in-out alternate',
             animationDelay: '-1s, -1s',
           }} />
-          {/* 중앙 화이트 톤 */}
           <div style={{
             position: 'absolute', borderRadius: '50%', filter: 'blur(90px)',
             width: '43%', height: '50%', background: '#ffffff', top: '15%', left: '18%',
             animation: 'blob-float 3s infinite ease-in-out alternate, blob-color-white 3s infinite ease-in-out alternate',
             animationDelay: '-2s, -2s',
           }} />
-          {/* 노이즈 오버레이 */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none"
             style={{ opacity: 0.45, mixBlendMode: 'overlay' }}
             xmlns="http://www.w3.org/2000/svg">
@@ -78,19 +71,18 @@ export default function LandingPage() {
             </filter>
             <rect width="100%" height="100%" filter="url(#noiseFilter)" />
           </svg>
-          {/* 하단 페이드 아웃 → 흰 배경과 자연스럽게 연결 */}
           <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
             style={{ background: 'linear-gradient(to bottom, transparent, #ffffff)' }} />
         </div>
 
         <h1 className="reveal keep-all text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6 max-w-4xl" style={{ transitionDelay: '100ms' }}>
-          나만의 OPIc 예상 문제를<br />
-          <span className="text-toss-blue">AI가 즉시 생성</span>
+          실제 기출 문제로 준비하는<br />
+          <span className="text-toss-blue">OPIc 예상 문제</span>
         </h1>
 
         <p className="reveal text-lg md:text-xl text-toss-gray600 mb-10 max-w-xl keep-all leading-relaxed" style={{ transitionDelay: '200ms' }}>
-          키워드와 목표 등급을 선택하면 기출 문제 기반으로
-          나만의 맞춤 예상 문제를 무료로 생성해 드립니다.
+          실제 OPIc 기출 문제 데이터를 바탕으로
+          나의 키워드와 목표 등급에 맞는 예상 문제를 무료로 제공합니다.
         </p>
 
         <div className="reveal flex flex-col sm:flex-row gap-3 w-full max-w-sm" style={{ transitionDelay: '300ms' }}>
@@ -110,7 +102,6 @@ export default function LandingPage() {
           </a>
         </div>
       </section>
-
 
       {/* How it works */}
       <section className="py-24 bg-white">
