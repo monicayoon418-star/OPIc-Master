@@ -14,7 +14,7 @@ export default function Footer() {
               <span className="font-bold text-toss-gray800">OPIc Master</span>
             </div>
             <p className="text-sm text-toss-gray500 keep-all max-w-xs">
-              실제 OPIc 시험 환경에서 AI 기반 모의고사를 체험하세요.
+              실제 기출 문제 데이터 기반으로 나만의 OPIc 예상 문제를 생성하세요.
             </p>
           </div>
 
@@ -22,8 +22,7 @@ export default function Footer() {
             <div className="space-y-2">
               <p className="font-semibold text-toss-gray700">서비스</p>
               <Link href="/guide" className="block text-toss-gray500 hover:text-toss-dark">오픽 가이드</Link>
-              <Link href="/exam" className="block text-toss-gray500 hover:text-toss-dark">모의고사</Link>
-              <Link href="/community" className="block text-toss-gray500 hover:text-toss-dark">커뮤니티</Link>
+              <Link href="/exam" className="block text-toss-gray500 hover:text-toss-dark">문제 생성</Link>
               <Link href="/resources" className="block text-toss-gray500 hover:text-toss-dark">오픽 자료</Link>
             </div>
             <div className="space-y-2">
