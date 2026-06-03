@@ -21,8 +21,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleKakao = () => signIn('kakao', { callbackUrl: next })
-
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -37,6 +35,7 @@ export default function LoginPage() {
     e.preventDefault()
     if (!nickname.trim() || !email.trim() || !password.trim()) { setError('모든 필드를 입력해주세요.'); return }
     setLoading(true)
+    setError('')
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -69,23 +68,6 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-3xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.08)] border border-toss-gray100 p-8">
-          {/* Kakao */}
-          <button
-            onClick={handleKakao}
-            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl bg-[#FEE500] hover:bg-[#f0d800] text-[#191919] font-semibold text-sm transition-colors mb-6"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M9 1.5C4.86 1.5 1.5 4.11 1.5 7.35c0 2.1 1.395 3.945 3.48 5.01l-.885 3.285 3.84-2.535c.33.045.675.075 1.065.075 4.14 0 7.5-2.61 7.5-5.835S13.14 1.5 9 1.5z" fill="#391B1B"/>
-            </svg>
-            카카오로 계속하기
-          </button>
-
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-toss-gray100" />
-            <span className="text-xs text-toss-gray400 font-medium">또는</span>
-            <div className="flex-1 h-px bg-toss-gray100" />
-          </div>
-
           {/* Tab */}
           <div className="flex bg-toss-gray50 rounded-xl p-1 mb-5">
             {(['login', 'signup'] as const).map(t => (
