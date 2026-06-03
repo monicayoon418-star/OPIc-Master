@@ -8,25 +8,26 @@ interface SphereState {
   vx: number
   vy: number
   r: number
+  baseVx: number
+  baseVy: number
 }
 
 const SPHERE_CONFIGS = [
-  { r: 380, color: '#dbeafe', blur: 110, opacity: 0.88 }, // 연한 하늘색
-  { r: 300, color: '#c4b5fd', blur: 85,  opacity: 0.80 }, // 연보라
-  { r: 240, color: '#7dd3fc', blur: 75,  opacity: 0.78 }, // 하늘색
-  { r: 220, color: '#86efac', blur: 70,  opacity: 0.75 }, // 연두색
-  { r: 200, color: '#3b82f6', blur: 55,  opacity: 0.80 }, // 진한 파랑
-  { r: 180, color: '#bbf7d0', blur: 65,  opacity: 0.72 }, // 민트 연두
+  { r: 380, color: '#dbeafe', blur: 110, opacity: 0.88 },
+  { r: 300, color: '#c4b5fd', blur: 85,  opacity: 0.80 },
+  { r: 240, color: '#7dd3fc', blur: 75,  opacity: 0.78 },
+  { r: 220, color: '#86efac', blur: 70,  opacity: 0.75 },
+  { r: 200, color: '#3b82f6', blur: 55,  opacity: 0.80 },
+  { r: 180, color: '#bbf7d0', blur: 65,  opacity: 0.72 },
 ]
 
-// 시작 위치: 좌우로 분산 (x: 좌측 0.1~0.4 / 우측 0.6~0.9)
 const INITIAL_POS = [
-  { x: 0.15, y: 0.20 }, // 좌상
-  { x: 0.78, y: 0.15 }, // 우상
-  { x: 0.12, y: 0.70 }, // 좌하
-  { x: 0.80, y: 0.68 }, // 우하
-  { x: 0.30, y: 0.45 }, // 중앙좌
-  { x: 0.68, y: 0.50 }, // 중앙우
+  { x: 0.15, y: 0.20 },
+  { x: 0.78, y: 0.15 },
+  { x: 0.12, y: 0.70 },
+  { x: 0.80, y: 0.68 },
+  { x: 0.30, y: 0.45 },
+  { x: 0.68, y: 0.50 },
 ]
 
 const SPEEDS = [
@@ -43,6 +44,7 @@ export default function BouncingSpheres() {
   const statesRef   = useRef<SphereState[]>([])
   const domsRef     = useRef<(HTMLDivElement | null)[]>([null, null, null, null, null, null])
   const rafRef      = useRef<number>(0)
+  const mouseRef    = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const container = containerRef.current
@@ -57,13 +59,62 @@ export default function BouncingSpheres() {
       vx: SPEEDS[i].vx,
       vy: SPEEDS[i].vy,
       r: cfg.r,
+      baseVx: SPEEDS[i].vx,
+      baseVy: SPEEDS[i].vy,
     }))
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      // 히어로 섹션 안에 있을 때만 감지
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        mouseRef.current = { x, y }
+      } else {
+        mouseRef.current = null
+      }
+    }
+    const onMouseLeave = () => { mouseRef.current = null }
+
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseleave', onMouseLeave)
 
     const tick = () => {
       const w = container.offsetWidth
       const h = container.offsetHeight
 
       statesRef.current.forEach((s, i) => {
+        // 마우스 반발력
+        if (mouseRef.current) {
+          const dx = s.x - mouseRef.current.x
+          const dy = s.y - mouseRef.current.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          const repelRadius = s.r + 180
+
+          if (dist < repelRadius && dist > 1) {
+            const force = ((repelRadius - dist) / repelRadius) * 4.0
+            s.vx += (dx / dist) * force
+            s.vy += (dy / dist) * force
+          }
+        }
+
+        // 최대 속도 제한
+        const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy)
+        const maxSpeed = 8.0
+        if (speed > maxSpeed) {
+          s.vx = (s.vx / speed) * maxSpeed
+          s.vy = (s.vy / speed) * maxSpeed
+        }
+
+        // 마우스 멀어지면 서서히 원래 속도로 복귀
+        if (!mouseRef.current) {
+          const baseSpeed = Math.sqrt(s.baseVx * s.baseVx + s.baseVy * s.baseVy)
+          if (speed > baseSpeed * 1.3) {
+            s.vx *= 0.992
+            s.vy *= 0.992
+          }
+        }
+
         s.x += s.vx
         s.y += s.vy
 
@@ -80,7 +131,12 @@ export default function BouncingSpheres() {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
+
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseleave', onMouseLeave)
+    }
   }, [])
 
   return (
