@@ -16,7 +16,17 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const { content, category, difficulty, keywords } = await req.json()
-  const q = await prisma.question.create({ data: { content, category, difficulty, keywords: keywords ?? [] } })
+  const { content, category, difficulty, keywords, comboId, comboOrder } = await req.json()
+  const q = await prisma.question.create({
+    data: {
+      content,
+      category,
+      difficulty: Array.isArray(difficulty) ? difficulty : [difficulty],
+      keywords: keywords ?? [],
+      comboId: comboId ?? null,
+      comboOrder: comboOrder ?? null,
+    },
+    include: { combo: { select: { id: true, name: true, keyword: true } } },
+  })
   return NextResponse.json(q)
 }

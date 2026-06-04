@@ -11,20 +11,20 @@ import {
 } from '@/types'
 
 function ChipGroup({
-  options, selected, onToggle, label, minSelect = 1
+  options, selected, onToggle, label, hint,
 }: {
   options: { value: string; label: string }[] | string[]
   selected: string[]
   onToggle: (v: string) => void
   label: string
-  minSelect?: number
+  hint?: string
 }) {
   const items = options.map(o => typeof o === 'string' ? { value: o, label: o } : o)
   return (
-    <div className="mb-8">
+    <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
         <h3 className="font-bold text-toss-dark text-sm">{label}</h3>
-        {minSelect > 1 && <span className="text-xs text-toss-gray500">{minSelect}개 이상 선택</span>}
+        {hint && <span className="text-xs text-toss-gray500">{hint}</span>}
       </div>
       <div className="flex flex-wrap gap-2">
         {items.map(item => (
@@ -46,16 +46,20 @@ function ChipGroup({
 }
 
 function RadioGroup({
-  options, value, onChange, label
+  options, value, onChange, label, required,
 }: {
   options: { value: string; label: string }[]
   value: string
   onChange: (v: string) => void
   label: string
+  required?: boolean
 }) {
   return (
-    <div className="mb-8">
-      <h3 className="font-bold text-toss-dark text-sm mb-3">{label}</h3>
+    <div className="mb-5">
+      <div className="flex items-center gap-1.5 mb-3">
+        <h3 className="font-bold text-toss-dark text-sm">{label}</h3>
+        {required && <span className="text-xs text-toss-red font-semibold">*</span>}
+      </div>
       <div className="flex flex-wrap gap-2">
         {options.map(item => (
           <button
@@ -90,28 +94,12 @@ export default function KeywordsPage() {
   const toggleArr = (arr: string[], setArr: (v: string[]) => void, val: string) =>
     arr.includes(val) ? setArr(arr.filter(v => v !== val)) : setArr([...arr, val])
 
-  const totalSelected = [occupation, residence, isStudent].filter(Boolean).length
-    + leisure.length + hobbies.length + sports.length + vacation.length
-
-  const canProceed = totalSelected >= 12
-    && !!occupation
-    && !!isStudent
-    && !!residence
-    && leisure.length >= 2
-    && hobbies.length >= 1
-    && sports.length >= 1
-    && vacation.length >= 1
+  const bgSurveyComplete = !!occupation && !!isStudent && !!residence
+  const keywordCount = leisure.length + hobbies.length + sports.length + vacation.length
+  const canProceed = bgSurveyComplete && keywordCount >= 12
 
   const handleNext = () => {
-    setKeywords({
-      occupation,
-      isStudent: isStudent === '예',
-      residence,
-      leisure,
-      hobbies,
-      sports,
-      vacation,
-    })
+    setKeywords({ occupation, isStudent: isStudent === '예', residence, leisure, hobbies, sports, vacation })
     router.push('/exam/setup/preview')
   }
 
@@ -119,25 +107,40 @@ export default function KeywordsPage() {
     <div className="max-w-2xl mx-auto px-4 py-12">
       {/* Progress */}
       <div className="flex items-center gap-2 mb-8">
-        {[1, 2, 3].map((step) => (
+        {[1, 2, 3].map(step => (
           <div key={step} className={`h-1.5 flex-1 rounded-full ${step <= 2 ? 'bg-toss-blue' : 'bg-toss-gray100'}`} />
         ))}
       </div>
       <p className="text-sm font-semibold text-toss-blue mb-2">2단계 / 3단계</p>
       <h1 className="text-2xl font-bold text-toss-dark mb-2">관심 키워드 선택</h1>
 
-      <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl mb-8 ${totalSelected >= 12 ? 'bg-green-50 text-toss-green' : 'bg-toss-gray50 text-toss-gray600'}`}>
-        <Icon icon={totalSelected >= 12 ? 'solar:check-circle-bold' : 'solar:info-circle-bold'} className="text-lg" />
-        <span className="text-sm font-semibold">선택된 키워드: {totalSelected}개 {totalSelected < 12 && '(최소 12개 필요)'}</span>
+      {/* Background Survey 섹션 */}
+      <div className="p-5 bg-toss-gray50 rounded-2xl border border-toss-gray200 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-xs font-bold text-white bg-toss-gray500 px-2.5 py-1 rounded-full">Background Survey</span>
+          <span className="text-xs text-toss-gray500">OPIc 시험 응시 전 필수 설문 항목</span>
+        </div>
+        <RadioGroup label="현재 직업/종사 분야" options={OCCUPATION_OPTIONS} value={occupation} onChange={setOccupation} required />
+        <RadioGroup label="현재 학생이신가요?" options={[{ value: '예', label: '예' }, { value: '아니오', label: '아니오' }]} value={isStudent} onChange={setIsStudent} required />
+        <RadioGroup label="현재 거주지" options={RESIDENCE_OPTIONS} value={residence} onChange={setResidence} required />
+        <p className={`text-xs mt-2 flex items-center gap-1 ${bgSurveyComplete ? 'text-toss-green' : 'text-toss-gray400'}`}>
+          <Icon icon={bgSurveyComplete ? 'solar:check-circle-bold' : 'solar:info-circle-bold'} />
+          {bgSurveyComplete ? '완료' : '3가지 항목을 모두 선택해주세요.'}
+        </p>
       </div>
 
-      <RadioGroup label="현재 직업/종사 분야 *" options={OCCUPATION_OPTIONS} value={occupation} onChange={setOccupation} />
-      <RadioGroup label="현재 학생이신가요? *" options={[{ value: '예', label: '예' }, { value: '아니오', label: '아니오' }]} value={isStudent} onChange={setIsStudent} />
-      <RadioGroup label="현재 거주지 *" options={RESIDENCE_OPTIONS} value={residence} onChange={setResidence} />
-      <ChipGroup label="여가 활동" options={LEISURE_OPTIONS} selected={leisure} onToggle={v => toggleArr(leisure, setLeisure, v)} minSelect={2} />
-      <ChipGroup label="취미 / 관심사" options={HOBBY_OPTIONS} selected={hobbies} onToggle={v => toggleArr(hobbies, setHobbies, v)} minSelect={1} />
-      <ChipGroup label="즐기는 운동" options={SPORT_OPTIONS} selected={sports} onToggle={v => toggleArr(sports, setSports, v)} minSelect={1} />
-      <ChipGroup label="휴가 / 출장 경험" options={VACATION_OPTIONS} selected={vacation} onToggle={v => toggleArr(vacation, setVacation, v)} minSelect={1} />
+      {/* 관심 키워드 섹션 */}
+      <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl mb-6 ${keywordCount >= 12 ? 'bg-green-50 text-toss-green' : 'bg-toss-gray50 text-toss-gray600'}`}>
+        <Icon icon={keywordCount >= 12 ? 'solar:check-circle-bold' : 'solar:info-circle-bold'} className="text-lg" />
+        <span className="text-sm font-semibold">
+          선택된 관심 키워드: {keywordCount}개 {keywordCount < 12 && `(최소 12개 필요, ${12 - keywordCount}개 더 선택)`}
+        </span>
+      </div>
+
+      <ChipGroup label="여가 활동" options={LEISURE_OPTIONS} selected={leisure} onToggle={v => toggleArr(leisure, setLeisure, v)} />
+      <ChipGroup label="취미 / 관심사" options={HOBBY_OPTIONS} selected={hobbies} onToggle={v => toggleArr(hobbies, setHobbies, v)} />
+      <ChipGroup label="즐기는 운동" options={SPORT_OPTIONS} selected={sports} onToggle={v => toggleArr(sports, setSports, v)} />
+      <ChipGroup label="휴가 / 출장 경험" options={VACATION_OPTIONS} selected={vacation} onToggle={v => toggleArr(vacation, setVacation, v)} />
 
       <div className="flex gap-3">
         <Button variant="secondary" size="lg" onClick={() => router.back()}>이전</Button>

@@ -9,7 +9,7 @@ export interface GenerateQuestionsParams {
   targetLevel: string
   keywords: ExamKeywords
   criteria: string
-  actualQuestions: { content: string; category: string; difficulty: number }[]
+  actualQuestions: { content: string; category: string; difficulty: number[] }[]
 }
 
 export async function generateExamQuestions(params: GenerateQuestionsParams) {
