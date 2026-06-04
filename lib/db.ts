@@ -8,4 +8,5 @@ export const prisma =
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// 항상 전역 캐싱 (프로덕션 포함) — 커넥션 풀 초과 방지
+globalForPrisma.prisma = prisma
