@@ -20,6 +20,7 @@ export default function LoginPage() {
   const [job, setJob] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -81,7 +82,12 @@ export default function LoginPage() {
           {tab === 'login' ? (
             <form onSubmit={handleEmailLogin} className="space-y-3">
               <Input type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)} required />
-              <Input type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} required />
+              <div className="relative">
+                <Input type={showPassword ? 'text' : 'password'} placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)} required className="pr-11" />
+                <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-toss-gray400 hover:text-toss-gray600">
+                  <Icon icon={showPassword ? 'solar:eye-closed-bold' : 'solar:eye-bold'} className="text-lg" />
+                </button>
+              </div>
               {error && <p className="text-xs text-toss-red">{error}</p>}
               <Button type="submit" fullWidth size="lg" loading={loading}>로그인</Button>
             </form>
@@ -89,7 +95,12 @@ export default function LoginPage() {
             <form onSubmit={handleSignup} className="space-y-3">
               <Input placeholder="닉네임" value={nickname} onChange={e => setNickname(e.target.value)} required />
               <Input type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)} required />
-              <Input type="password" placeholder="비밀번호 (6자 이상)" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+              <div className="relative">
+                <Input type={showPassword ? 'text' : 'password'} placeholder="비밀번호 (6자 이상)" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} className="pr-11" />
+                <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-toss-gray400 hover:text-toss-gray600">
+                  <Icon icon={showPassword ? 'solar:eye-closed-bold' : 'solar:eye-bold'} className="text-lg" />
+                </button>
+              </div>
               <Input type="number" placeholder="나이 (선택)" value={age} onChange={e => setAge(e.target.value)} min={10} max={100} />
               <select value={job} onChange={e => setJob(e.target.value)}
                 className="w-full px-4 py-3 rounded-2xl border border-toss-gray200 text-sm text-toss-gray700 focus:outline-none focus:ring-2 focus:ring-toss-blue/20 focus:border-toss-blue bg-white">
