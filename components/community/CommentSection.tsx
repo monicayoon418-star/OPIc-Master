@@ -1,15 +1,91 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import { formatDate } from '@/lib/utils'
 import type { Comment } from '@/types'
+import ReportModal from './ReportModal'
 
 interface CommentSectionProps {
   postId: string
   comments: Comment[]
   currentUserId?: string
   isAdmin?: boolean
+}
+
+function CommentMenu({
+  postId,
+  comment,
+  currentUserId,
+  isAdmin,
+  onDelete,
+}: {
+  postId: string
+  comment: Comment
+  currentUserId?: string
+  isAdmin?: boolean
+  onDelete: (id: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [showReport, setShowReport] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const isOwner = currentUserId === comment.userId
+  const canDelete = isOwner || isAdmin
+  const canReport = !!currentUserId && !isOwner && !isAdmin
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  if (!canDelete && !canReport) return null
+
+  return (
+    <>
+      <div className="relative" ref={ref}>
+        <button
+          onClick={() => setOpen(v => !v)}
+          className="p-1 rounded-lg hover:bg-toss-gray200 text-toss-gray400 transition-colors"
+        >
+          <Icon icon="solar:menu-dots-bold" className="text-base" />
+        </button>
+        {open && (
+          <div className="absolute right-0 top-7 z-20 bg-white border border-toss-gray200 rounded-xl shadow-lg py-1 w-28 overflow-hidden">
+            {canDelete && (
+              <button
+                onClick={() => { setOpen(false); onDelete(comment.id) }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50"
+              >
+                <Icon icon="solar:trash-bin-2-bold" className="text-red-400" />
+                삭제
+              </button>
+            )}
+            {canReport && (
+              <button
+                onClick={() => { setOpen(false); setShowReport(true) }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50"
+              >
+                <Icon icon="solar:danger-triangle-bold" className="text-red-400" />
+                신고하기
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+      {showReport && (
+        <ReportModal
+          type="comment"
+          postId={postId}
+          commentId={comment.id}
+          onClose={() => setShowReport(false)}
+        />
+      )}
+    </>
+  )
 }
 
 export default function CommentSection({ postId, comments: initial, currentUserId, isAdmin }: CommentSectionProps) {
@@ -54,11 +130,13 @@ export default function CommentSection({ postId, comments: initial, currentUserI
                 <span className="text-sm font-semibold text-toss-dark">{comment.user.nickname}</span>
                 <span className="text-xs text-toss-gray400">{formatDate(comment.createdAt)}</span>
               </div>
-              {(currentUserId === comment.userId || isAdmin) && (
-                <button onClick={() => handleDelete(comment.id)} className="text-xs text-toss-gray400 hover:text-toss-red">
-                  삭제
-                </button>
-              )}
+              <CommentMenu
+                postId={postId}
+                comment={comment}
+                currentUserId={currentUserId}
+                isAdmin={isAdmin}
+                onDelete={handleDelete}
+              />
             </div>
             <p className="text-sm text-toss-gray700 keep-all whitespace-pre-wrap">{comment.content}</p>
           </div>

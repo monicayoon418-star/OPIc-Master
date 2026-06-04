@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/utils'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import CommentSection from '@/components/community/CommentSection'
-import DeletePostButton from '@/components/community/DeletePostButton'
+import PostActionMenu from '@/components/community/PostActionMenu'
 
 export default async function ReviewDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -42,12 +42,14 @@ export default async function ReviewDetailPage({ params }: { params: Promise<{ i
           <span className="font-medium text-toss-gray700">{post.user.nickname}</span>
           <span>{formatDate(post.createdAt.toISOString())}</span>
           <span className="flex items-center gap-1 ml-auto"><Icon icon="solar:eye-bold" />{post.viewCount}</span>
-          {(isOwner || isAdmin) && (
-            <div className="flex gap-3">
-              {isOwner && <Link href={`/community/reviews/${post.id}/edit`} className="text-toss-blue hover:underline">수정</Link>}
-              <DeletePostButton postId={post.id} backHref="/community/reviews" />
-            </div>
-          )}
+          <PostActionMenu
+            postId={post.id}
+            postUserId={post.userId}
+            currentUserId={session?.user?.id}
+            isAdmin={isAdmin}
+            editHref={`/community/reviews/${post.id}/edit`}
+            backHref="/community/reviews"
+          />
         </div>
       </div>
 

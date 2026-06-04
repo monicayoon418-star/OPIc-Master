@@ -22,7 +22,7 @@ export default function Footer() {
             <p className="font-semibold text-toss-gray700">서비스</p>
             <Link href="/guide" className="block text-toss-gray500 hover:text-toss-dark">오픽 가이드</Link>
             <Link href="/exam" className="block text-toss-gray500 hover:text-toss-dark">문제 생성</Link>
-            <Link href="/community" className="block text-toss-gray500 hover:text-toss-dark">시험 후기</Link>
+            <Link href="/community" className="block text-toss-gray500 hover:text-toss-dark">커뮤니티</Link>
             <Link href="/resources" className="block text-toss-gray500 hover:text-toss-dark">오픽 자료</Link>
           </div>
 

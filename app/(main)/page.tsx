@@ -171,7 +171,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="reveal flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-toss-dark mb-2">시험 후기</h2>
+              <h2 className="text-3xl font-bold text-toss-dark mb-2">커뮤니티</h2>
               <p className="text-toss-gray600">OPIc 수험생들의 생생한 경험을 확인하세요</p>
             </div>
             <Link href="/community" className="flex items-center gap-1 text-sm font-semibold text-toss-blue hover:underline">

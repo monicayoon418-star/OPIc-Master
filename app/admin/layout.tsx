@@ -8,6 +8,7 @@ const ADMIN_NAV = [
   { href: '/admin/questions', icon: 'solar:document-add-bold-duotone', label: '문제 관리' },
   { href: '/admin/criteria', icon: 'solar:settings-bold-duotone', label: '생성 기준' },
   { href: '/admin/posts', icon: 'solar:chat-square-bold-duotone', label: '게시글 관리' },
+  { href: '/admin/reports', icon: 'solar:danger-triangle-bold-duotone', label: '신고 관리' },
   { href: '/admin/resources', icon: 'solar:video-frame-bold-duotone', label: '자료 관리' },
   { href: '/admin/requests', icon: 'solar:letter-bold-duotone', label: '요청사항' },
   { href: '/admin/users', icon: 'solar:users-group-rounded-bold-duotone', label: '사용자 관리' },

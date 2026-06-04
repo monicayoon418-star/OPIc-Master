@@ -46,7 +46,7 @@ export default async function CommunityPage({
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-toss-dark">시험 후기</h1>
+          <h1 className="text-2xl font-bold text-toss-dark">커뮤니티</h1>
           <p className="text-sm text-toss-gray500 mt-1">총 {total}개의 글</p>
         </div>
         {session && <WriteButton />}
