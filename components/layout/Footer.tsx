@@ -13,7 +13,7 @@ export default function Footer() {
               <div className="w-7 h-7 bg-toss-gray300 rounded-lg flex items-center justify-center text-white">
                 <Icon icon="solar:mic-2-bold-duotone" className="text-sm" />
               </div>
-              <span className="font-bold text-toss-gray800">OPIc Master</span>
+              <span className="font-bold text-toss-gray800">OPIc Example</span>
             </div>
           </div>
 
@@ -40,7 +40,7 @@ export default function Footer() {
         </p>
 
         <div className="mt-6 pt-6 border-t border-toss-gray200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-toss-gray400">
-          <p>© 2026 OPIc Master. All rights reserved.</p>
+          <p>© 2026 OPIc Example. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-toss-gray600 font-semibold">개인정보처리방침</Link>
           </div>

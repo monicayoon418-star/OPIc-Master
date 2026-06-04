@@ -122,7 +122,7 @@ export default function GuidePage() {
         <p>
           본 페이지의 시험 정보는{' '}
           <a href="https://www.opic.or.kr" target="_blank" rel="noopener noreferrer" className="underline hover:text-toss-blue">OPIc 공식 사이트(opic.or.kr)</a>를
-          참고하여 작성되었습니다. OPIc Master는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
+          참고하여 작성되었습니다. OPIc Example는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
         </p>
       </div>
 

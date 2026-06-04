@@ -8,7 +8,7 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-lg font-bold text-toss-dark mb-3">1. 수집하는 개인정보 항목</h2>
-          <p className="mb-2">OPIc Master(이하 "서비스")는 회원가입 및 서비스 제공을 위해 아래의 개인정보를 수집합니다.</p>
+          <p className="mb-2">OPIc Example(이하 "서비스")는 회원가입 및 서비스 제공을 위해 아래의 개인정보를 수집합니다.</p>
           <ul className="list-disc pl-5 space-y-1">
             <li><span className="font-semibold">필수 항목:</span> 이메일 주소, 비밀번호(암호화 저장), 닉네임</li>
             <li><span className="font-semibold">선택 항목:</span> 나이, 직업</li>
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
         <section className="p-5 bg-toss-gray50 rounded-2xl border border-toss-gray200">
           <h2 className="text-base font-bold text-toss-dark mb-2">면책 고지</h2>
           <p className="text-toss-gray600">
-            OPIc Master는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
+            OPIc Example는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다.
             OPIc(Oral Proficiency Interview by Computer)은 ACTFL이 개발하고 YBM이 한국 내 운영을 담당하는 공인 영어 말하기 시험입니다.
             본 서비스에서 제공하는 예상 문제는 AI를 활용하여 유사하게 생성된 학습용 문제이며, 실제 시험 문제와 동일하지 않습니다.
           </p>

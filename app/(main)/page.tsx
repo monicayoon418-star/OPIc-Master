@@ -66,7 +66,7 @@ export default function LandingPage() {
             className="reveal font-semibold text-white leading-[1.1] keep-all"
             style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '12px' }}
           >
-            OPIc Master
+            OPIc Example
           </h1>
 
           {/* 설명글 */}

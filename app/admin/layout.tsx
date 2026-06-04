@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Icon icon="solar:mic-2-bold-duotone" className="text-sm" />
             </div>
             <div>
-              <p className="font-bold text-sm text-toss-dark">OPIc Master</p>
+              <p className="font-bold text-sm text-toss-dark">OPIc Example</p>
               <p className="text-xs text-toss-gray500">관리자</p>
             </div>
           </Link>

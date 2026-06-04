@@ -38,7 +38,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex-shrink-0">
-            <span className={`font-bold text-lg tracking-tight transition-colors duration-500 ${transparent ? 'text-toss-dark/80' : 'text-toss-dark'}`}>OPIc Master</span>
+            <span className={`font-bold text-lg tracking-tight transition-colors duration-500 ${transparent ? 'text-toss-dark/80' : 'text-toss-dark'}`}>OPIc Example</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">

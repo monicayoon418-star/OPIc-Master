@@ -62,7 +62,7 @@ export default function LoginPage() {
             <div className="w-9 h-9 bg-toss-blue rounded-xl flex items-center justify-center text-white">
               <Icon icon="solar:mic-2-bold-duotone" className="text-lg" />
             </div>
-            <span className="font-bold text-xl text-toss-dark">OPIc Master</span>
+            <span className="font-bold text-xl text-toss-dark">OPIc Example</span>
           </Link>
           <p className="text-toss-gray600 text-sm">계속하려면 로그인하세요</p>
         </div>
