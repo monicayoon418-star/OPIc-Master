@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Icon } from '@iconify/react'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
@@ -25,7 +25,7 @@ const KEYWORD_GROUPS = [
   { label: '운동', options: SPORT_OPTIONS },
   { label: '휴가/출장', options: VACATION_OPTIONS },
 ]
-const CATEGORIES = ['자기소개', '거주지', '여가활동', '취미', '운동', '여행', '직업', '롤플레이', '돌발']
+const PRESET_CATEGORIES = ['자기소개', '거주지', '여가활동', '취미', '운동', '여행', '직업', '롤플레이', '돌발']
 const ALL_DIFFICULTIES = [1, 2, 3, 4, 5, 6]
 
 export default function QuestionsAdmin() {
@@ -36,9 +36,15 @@ export default function QuestionsAdmin() {
   const [comboModalOpen, setComboModalOpen] = useState(false)
   const [editingCombo, setEditingCombo] = useState<Combo | null>(null)
   const [editing, setEditing] = useState<Question | null>(null)
-  const [form, setForm] = useState({ content: '', category: '', difficulty: [] as number[], keywords: [] as string[], comboId: '', comboOrder: '' })
+  const [form, setForm] = useState({
+    content: '', category: '', difficulty: [] as number[],
+    keywords: [] as string[], comboId: '', comboOrder: '',
+    newComboName: '', newComboKeyword: '',
+  })
   const [comboForm, setComboForm] = useState({ name: '', keyword: '' })
   const [search, setSearch] = useState('')
+  const [catFilter, setCatFilter] = useState('전체')
+  const [comboCatFilter, setComboCatFilter] = useState('전체')
 
   const loadAll = () => {
     fetch('/api/admin/questions').then(r => r.json()).then(d => setQuestions(d.data ?? []))
@@ -46,9 +52,21 @@ export default function QuestionsAdmin() {
   }
   useEffect(() => { loadAll() }, [])
 
+  // 현재 등록된 카테고리 목록 (프리셋 + 커스텀, 중복 제거)
+  const allCategories = useMemo(() => {
+    const fromQuestions = questions.map(q => q.category).filter(Boolean)
+    return ['전체', ...Array.from(new Set([...PRESET_CATEGORIES, ...fromQuestions]))]
+  }, [questions])
+
+  // 콤보 탭용 카테고리 목록 (콤보 내 문제 기준)
+  const comboCatOptions = useMemo(() => {
+    const cats = combos.flatMap(c => c.questions.map(q => q.category)).filter(Boolean)
+    return ['전체', ...Array.from(new Set(cats))]
+  }, [combos])
+
   const openNew = () => {
     setEditing(null)
-    setForm({ content: '', category: '', difficulty: [], keywords: [], comboId: '', comboOrder: '' })
+    setForm({ content: '', category: '', difficulty: [], keywords: [], comboId: '', comboOrder: '', newComboName: '', newComboKeyword: '' })
     setModalOpen(true)
   }
   const openEdit = (q: Question) => {
@@ -59,6 +77,7 @@ export default function QuestionsAdmin() {
       keywords: q.keywords ?? [],
       comboId: q.comboId ?? '',
       comboOrder: q.comboOrder?.toString() ?? '',
+      newComboName: '', newComboKeyword: '',
     })
     setModalOpen(true)
   }
@@ -71,16 +90,12 @@ export default function QuestionsAdmin() {
 
   const handleSave = async () => {
     let resolvedComboId = form.comboId || null
-
-    // 새 콤보 인라인 생성
     if (form.comboId === '__new__') {
-      const newName = (form as any).newComboName ?? ''
-      const newKeyword = (form as any).newComboKeyword ?? ''
-      if (!newName || !newKeyword) return
+      if (!form.newComboName || !form.newComboKeyword) return
       const res = await fetch('/api/admin/combos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName, keyword: newKeyword }),
+        body: JSON.stringify({ name: form.newComboName, keyword: form.newComboKeyword }),
       })
       const newCombo = await res.json()
       resolvedComboId = newCombo.id
@@ -88,8 +103,7 @@ export default function QuestionsAdmin() {
 
     const payload = {
       content: form.content, category: form.category,
-      difficulty: form.difficulty,
-      keywords: form.keywords,
+      difficulty: form.difficulty, keywords: form.keywords,
       comboId: form.category === '돌발' ? null : resolvedComboId,
       comboOrder: form.category === '돌발' ? null : (form.comboOrder ? Number(form.comboOrder) : null),
     }
@@ -127,7 +141,29 @@ export default function QuestionsAdmin() {
     loadAll()
   }
 
-  const filtered = questions.filter(q => q.content.includes(search) || q.category.includes(search))
+  const filtered = questions.filter(q =>
+    (catFilter === '전체' || q.category === catFilter) &&
+    (q.content.includes(search) || q.category.includes(search))
+  )
+
+  const filteredCombos = combos.filter(c =>
+    comboCatFilter === '전체' || c.questions.some(q => q.category === comboCatFilter)
+  )
+
+  const FilterChips = ({ options, value, onChange }: { options: string[]; value: string; onChange: (v: string) => void }) => (
+    <div className="flex flex-wrap gap-1.5 mb-4">
+      {options.map(cat => (
+        <button key={cat} onClick={() => onChange(cat)}
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${value === cat ? 'bg-toss-blue text-white' : 'bg-toss-gray100 text-toss-gray600 hover:bg-toss-gray200'}`}>
+          {cat}
+        </button>
+      ))}
+    </div>
+  )
+
+  const showComboOrder = form.comboId && form.comboId !== '__new__'
+  const showNewComboInputs = form.comboId === '__new__'
+  const showOrderForNew = form.comboId === '__new__'
 
   return (
     <div>
@@ -151,10 +187,14 @@ export default function QuestionsAdmin() {
 
       {tab === 'questions' && (
         <>
-          <div className="flex items-start gap-2 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-xs text-yellow-800 mb-6">
+          <div className="flex items-start gap-2 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-xs text-yellow-800 mb-4">
             <Icon icon="solar:danger-triangle-bold" className="flex-shrink-0 mt-0.5 text-yellow-600" />
             <p><span className="font-semibold">저작권 주의:</span> 실제 OPIc 기출 문제를 그대로 등록하지 마세요. 반드시 표현을 변경하거나 유사하게 재작성한 문제만 등록해 주세요.</p>
           </div>
+
+          {/* 카테고리 필터 */}
+          <FilterChips options={allCategories} value={catFilter} onChange={setCatFilter} />
+
           <div className="bg-white rounded-2xl border border-toss-gray100 overflow-hidden">
             <div className="p-4 border-b border-toss-gray100">
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="문제 검색..." className="w-full px-4 py-2 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20" />
@@ -165,12 +205,14 @@ export default function QuestionsAdmin() {
                   <th className="text-left px-5 py-3 font-semibold">문제 내용</th>
                   <th className="text-left px-4 py-3 font-semibold w-24">카테고리</th>
                   <th className="text-center px-4 py-3 font-semibold w-20">난이도</th>
-                  <th className="text-left px-4 py-3 font-semibold w-28">콤보</th>
+                  <th className="text-left px-4 py-3 font-semibold w-32">콤보/타입</th>
                   <th className="w-20 px-4" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-toss-gray100">
-                {filtered.map(q => (
+                {filtered.length === 0 ? (
+                  <tr><td colSpan={5} className="text-center py-12 text-toss-gray400">해당 카테고리의 문제가 없습니다.</td></tr>
+                ) : filtered.map(q => (
                   <tr key={q.id} className="hover:bg-toss-gray50/50">
                     <td className="px-5 py-3 text-toss-dark max-w-xs truncate">{q.content}</td>
                     <td className="px-4 py-3 text-toss-gray600">{q.category}</td>
@@ -211,40 +253,47 @@ export default function QuestionsAdmin() {
       )}
 
       {tab === 'combos' && (
-        <div className="space-y-4">
-          {combos.length === 0 ? (
-            <div className="text-center py-16 text-toss-gray400">
-              <Icon icon="solar:layers-bold-duotone" className="text-4xl mx-auto mb-3 block text-toss-gray300" />
-              <p>등록된 콤보가 없습니다.</p>
-            </div>
-          ) : combos.map(combo => (
-            <div key={combo.id} className="bg-white border border-toss-gray200 rounded-2xl p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <span className="font-bold text-toss-dark">{combo.name}</span>
-                  <span className="ml-2 text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-medium">{combo.keyword}</span>
-                  <span className="ml-2 text-xs text-toss-gray500">{combo.questions.length}개 문제</span>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => openEditCombo(combo)} className="p-1.5 hover:bg-toss-gray100 rounded-lg text-toss-gray500"><Icon icon="solar:pen-bold" /></button>
-                  <button onClick={() => handleDeleteCombo(combo.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-toss-gray500 hover:text-toss-red"><Icon icon="solar:trash-bin-2-bold" /></button>
-                </div>
+        <>
+          {/* 콤보 탭 카테고리 필터 */}
+          {comboCatOptions.length > 1 && (
+            <FilterChips options={comboCatOptions} value={comboCatFilter} onChange={setComboCatFilter} />
+          )}
+
+          <div className="space-y-4">
+            {filteredCombos.length === 0 ? (
+              <div className="text-center py-16 text-toss-gray400">
+                <Icon icon="solar:layers-bold-duotone" className="text-4xl mx-auto mb-3 block text-toss-gray300" />
+                <p>{combos.length === 0 ? '등록된 콤보가 없습니다.' : '해당 카테고리의 콤보가 없습니다.'}</p>
               </div>
-              <div className="space-y-2">
-                {combo.questions.map(q => (
-                  <div key={q.id} className="flex items-start gap-3 p-3 bg-toss-gray50 rounded-xl text-sm">
-                    <span className="shrink-0 w-6 h-6 bg-toss-blue text-white rounded-full flex items-center justify-center text-xs font-bold">{q.comboOrder}</span>
-                    <span className="text-toss-gray700 flex-1">{q.content}</span>
-                    <span className="shrink-0 text-xs text-toss-gray400">{q.category}</span>
+            ) : filteredCombos.map(combo => (
+              <div key={combo.id} className="bg-white border border-toss-gray200 rounded-2xl p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <span className="font-bold text-toss-dark">{combo.name}</span>
+                    <span className="ml-2 text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-medium">{combo.keyword}</span>
+                    <span className="ml-2 text-xs text-toss-gray500">{combo.questions.length}개 문제</span>
                   </div>
-                ))}
-                {combo.questions.length === 0 && (
-                  <p className="text-xs text-toss-gray400 pl-1">아직 소속 문제가 없습니다. 문제 등록 시 이 콤보를 선택하세요.</p>
-                )}
+                  <div className="flex gap-2">
+                    <button onClick={() => openEditCombo(combo)} className="p-1.5 hover:bg-toss-gray100 rounded-lg text-toss-gray500"><Icon icon="solar:pen-bold" /></button>
+                    <button onClick={() => handleDeleteCombo(combo.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-toss-gray500 hover:text-toss-red"><Icon icon="solar:trash-bin-2-bold" /></button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {combo.questions.map(q => (
+                    <div key={q.id} className="flex items-start gap-3 p-3 bg-toss-gray50 rounded-xl text-sm">
+                      <span className="shrink-0 w-6 h-6 bg-toss-blue text-white rounded-full flex items-center justify-center text-xs font-bold">{q.comboOrder}</span>
+                      <span className="text-toss-gray700 flex-1">{q.content}</span>
+                      <span className="shrink-0 text-xs text-toss-gray400">{q.category}</span>
+                    </div>
+                  ))}
+                  {combo.questions.length === 0 && (
+                    <p className="text-xs text-toss-gray400 pl-1">아직 소속 문제가 없습니다. 문제 등록 시 이 콤보를 선택하세요.</p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* 문제 추가/수정 모달 */}
@@ -252,16 +301,23 @@ export default function QuestionsAdmin() {
         <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
           <Textarea label="문제 내용" value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={3} />
 
+          {/* 카테고리: 프리셋 버튼 + 직접 입력 */}
           <div>
             <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">카테고리</label>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map(c => (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {PRESET_CATEGORIES.map(c => (
                 <button key={c} onClick={() => setForm(f => ({ ...f, category: c }))}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${form.category === c ? 'bg-toss-blue text-white border-toss-blue' : 'bg-white text-toss-gray700 border-toss-gray200 hover:border-toss-blue/50'}`}>
                   {c}
                 </button>
               ))}
             </div>
+            <input
+              value={form.category}
+              onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+              placeholder="위에서 선택하거나 직접 입력 (예: 집 묘사, 가게 묘사)"
+              className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
+            />
           </div>
 
           <div>
@@ -312,44 +368,22 @@ export default function QuestionsAdmin() {
                   className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
                 >
                   <option value="">콤보 없음 (단독 문제)</option>
-                  {combos.map(c => (
-                    <option key={c.id} value={c.id}>{c.name} ({c.keyword})</option>
-                  ))}
+                  {combos.map(c => <option key={c.id} value={c.id}>{c.name} ({c.keyword})</option>)}
                   <option value="__new__">＋ 새 콤보 만들기</option>
                 </select>
 
-                {form.comboId === '__new__' && (
+                {showNewComboInputs && (
                   <div className="p-3 bg-toss-blueLight rounded-xl space-y-2">
-                    <input
-                      value={(form as any).newComboName ?? ''}
-                      onChange={e => setForm(f => ({ ...f, newComboName: e.target.value } as any))}
+                    <input value={form.newComboName} onChange={e => setForm(f => ({ ...f, newComboName: e.target.value }))}
                       placeholder="콤보 이름 (예: 영화보기 콤보)"
-                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white"
-                    />
-                    <input
-                      value={(form as any).newComboKeyword ?? ''}
-                      onChange={e => setForm(f => ({ ...f, newComboKeyword: e.target.value } as any))}
+                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white" />
+                    <input value={form.newComboKeyword} onChange={e => setForm(f => ({ ...f, newComboKeyword: e.target.value }))}
                       placeholder="대표 키워드 (예: 영화보기)"
-                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white"
-                    />
+                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white" />
                   </div>
                 )}
 
-                {form.comboId && form.comboId !== '__new__' && (
-                  <div>
-                    <label className="block text-xs text-toss-gray600 mb-1">콤보 내 순서 (1–3)</label>
-                    <div className="flex gap-2">
-                      {[1, 2, 3].map(n => (
-                        <button key={n} onClick={() => setForm(f => ({ ...f, comboOrder: String(n) }))}
-                          className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition-all ${form.comboOrder === String(n) ? 'bg-toss-blue text-white border-toss-blue' : 'bg-toss-gray50 text-toss-gray600 border-transparent'}`}>
-                          {n}번째
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {form.comboId === '__new__' && (
+                {(showComboOrder || showOrderForNew) && (
                   <div>
                     <label className="block text-xs text-toss-gray600 mb-1">콤보 내 순서 (1–3)</label>
                     <div className="flex gap-2">
@@ -384,21 +418,15 @@ export default function QuestionsAdmin() {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">콤보 이름</label>
-            <input
-              value={comboForm.name}
-              onChange={e => setComboForm(f => ({ ...f, name: e.target.value }))}
+            <input value={comboForm.name} onChange={e => setComboForm(f => ({ ...f, name: e.target.value }))}
               placeholder="예: 영화보기 콤보"
-              className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
-            />
+              className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20" />
           </div>
           <div>
             <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">대표 키워드</label>
-            <input
-              value={comboForm.keyword}
-              onChange={e => setComboForm(f => ({ ...f, keyword: e.target.value }))}
+            <input value={comboForm.keyword} onChange={e => setComboForm(f => ({ ...f, keyword: e.target.value }))}
               placeholder="예: 영화보기"
-              className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
-            />
+              className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20" />
           </div>
           <div className="flex gap-3 pt-2">
             <Button variant="secondary" fullWidth onClick={() => setComboModalOpen(false)}>취소</Button>
