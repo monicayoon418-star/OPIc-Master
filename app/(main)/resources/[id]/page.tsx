@@ -74,7 +74,7 @@ export default async function ResourceDetailPage({ params }: { params: Promise<{
 
       {/* 본문 */}
       {resource.description && (
-        <div className="p-5 bg-toss-gray50 rounded-2xl mb-6">
+        <div className="p-5 bg-toss-gray50 rounded-2xl mb-6 min-h-[256px]">
           <p className="text-sm text-toss-gray700 leading-relaxed whitespace-pre-wrap">{resource.description}</p>
         </div>
       )}
