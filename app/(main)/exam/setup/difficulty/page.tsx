@@ -31,6 +31,10 @@ export default function DifficultyPage() {
       <h1 className="text-2xl font-bold text-toss-dark mb-2">난이도를 선택하세요</h1>
       <p className="text-toss-gray600 mb-8">현재 본인의 영어 말하기 수준에 맞는 난이도를 선택하세요.</p>
 
+      <p style={{ fontSize: '11px', color: '#525D6F', lineHeight: '1.6', marginBottom: '16px' }}>
+        난이도별 문제는 AI 기반으로 생성되어 실제 시험 난이도와 차이가 있을 수 있습니다.
+      </p>
+
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
         {DIFFICULTY_INFO.map((item) => (
           <button
