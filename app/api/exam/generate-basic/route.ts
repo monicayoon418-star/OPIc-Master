@@ -10,10 +10,13 @@ type DBQuestion = {
 
 function buildComboUnits(questions: DBQuestion[]) {
   const comboMap = new Map<string, DBQuestion[]>()
+  const dolbalPool: DBQuestion[] = []
   const standalone: DBQuestion[] = []
 
   for (const q of questions) {
-    if (q.comboId) {
+    if (q.category === '돌발') {
+      dolbalPool.push(q)
+    } else if (q.comboId) {
       const group = comboMap.get(q.comboId) ?? []
       group.push(q)
       comboMap.set(q.comboId, group)
@@ -27,7 +30,17 @@ function buildComboUnits(questions: DBQuestion[]) {
     qs.sort((a, b) => (a.comboOrder ?? 0) - (b.comboOrder ?? 0))
   )
 
-  return [...comboUnits, ...standalone.map(q => [q])]
+  // 돌발 문제: 2~3개씩 랜덤 묶음
+  const dolbalUnits: DBQuestion[][] = []
+  const shuffledDolbal = [...dolbalPool].sort(() => Math.random() - 0.5)
+  let i = 0
+  while (i < shuffledDolbal.length) {
+    const groupSize = Math.random() < 0.5 ? 2 : 3
+    dolbalUnits.push(shuffledDolbal.slice(i, i + groupSize))
+    i += groupSize
+  }
+
+  return [...comboUnits, ...dolbalUnits, ...standalone.map(q => [q])]
 }
 
 function fillSession(

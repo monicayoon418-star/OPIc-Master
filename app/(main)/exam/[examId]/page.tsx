@@ -72,7 +72,11 @@ export default async function GeneratedSetPage({ params }: { params: Promise<{ e
               <div key={q.id} className="border border-toss-gray100 rounded-2xl p-4 hover:border-toss-gray200 transition-colors">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs font-bold text-toss-gray500">Q{i + 1}</span>
-                  <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{q.category}</span>
+                  {q.category === '돌발' ? (
+                    <span className="text-xs px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-semibold">돌발</span>
+                  ) : (
+                    <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{q.category}</span>
+                  )}
                 </div>
                 <p className="text-sm text-toss-dark leading-relaxed">{q.content}</p>
               </div>

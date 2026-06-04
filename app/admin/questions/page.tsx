@@ -70,12 +70,28 @@ export default function QuestionsAdmin() {
     setForm(f => ({ ...f, keywords: f.keywords.includes(kw) ? f.keywords.filter(k => k !== kw) : [...f.keywords, kw] }))
 
   const handleSave = async () => {
+    let resolvedComboId = form.comboId || null
+
+    // 새 콤보 인라인 생성
+    if (form.comboId === '__new__') {
+      const newName = (form as any).newComboName ?? ''
+      const newKeyword = (form as any).newComboKeyword ?? ''
+      if (!newName || !newKeyword) return
+      const res = await fetch('/api/admin/combos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, keyword: newKeyword }),
+      })
+      const newCombo = await res.json()
+      resolvedComboId = newCombo.id
+    }
+
     const payload = {
       content: form.content, category: form.category,
       difficulty: form.difficulty,
       keywords: form.keywords,
-      comboId: form.comboId || null,
-      comboOrder: form.comboOrder ? Number(form.comboOrder) : null,
+      comboId: form.category === '돌발' ? null : resolvedComboId,
+      comboOrder: form.category === '돌발' ? null : (form.comboOrder ? Number(form.comboOrder) : null),
     }
     const url = editing ? `/api/admin/questions/${editing.id}` : '/api/admin/questions'
     const method = editing ? 'PATCH' : 'POST'
@@ -165,13 +181,20 @@ export default function QuestionsAdmin() {
                         ))}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-xs text-toss-gray500">
-                      {q.combo ? (
-                        <span className="flex items-center gap-1">
-                          <Icon icon="solar:layers-bold" className="text-toss-blue" />
-                          {q.combo.name} <span className="text-toss-gray400">#{q.comboOrder}</span>
+                    <td className="px-4 py-3 text-xs">
+                      {q.category === '돌발' ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-semibold">
+                          <Icon icon="solar:danger-triangle-bold" className="text-xs" />돌발
                         </span>
-                      ) : '-'}
+                      ) : q.combo ? (
+                        <span className="inline-flex items-center gap-1 text-toss-gray600">
+                          <Icon icon="solar:layers-bold" className="text-toss-blue shrink-0" />
+                          <span className="truncate max-w-[80px]">{q.combo.name}</span>
+                          <span className="text-toss-gray400 shrink-0">#{q.comboOrder}</span>
+                        </span>
+                      ) : (
+                        <span className="text-toss-gray300">-</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -277,25 +300,56 @@ export default function QuestionsAdmin() {
           </div>
 
           {/* 콤보 설정 */}
-          <div>
-            <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">
-              콤보 설정 <span className="text-toss-gray400 font-normal text-xs">(선택사항)</span>
-            </label>
-            {combos.length === 0 ? (
-              <p className="text-xs text-toss-gray400">먼저 콤보 관리 탭에서 콤보를 만들어주세요.</p>
-            ) : (
+          {form.category !== '돌발' && (
+            <div>
+              <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">
+                콤보 설정 <span className="text-toss-gray400 font-normal text-xs">(선택사항)</span>
+              </label>
               <div className="space-y-2">
                 <select
                   value={form.comboId}
-                  onChange={e => setForm(f => ({ ...f, comboId: e.target.value }))}
+                  onChange={e => setForm(f => ({ ...f, comboId: e.target.value, newComboName: '', newComboKeyword: '' }))}
                   className="w-full px-4 py-2.5 rounded-xl border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
                 >
                   <option value="">콤보 없음 (단독 문제)</option>
                   {combos.map(c => (
                     <option key={c.id} value={c.id}>{c.name} ({c.keyword})</option>
                   ))}
+                  <option value="__new__">＋ 새 콤보 만들기</option>
                 </select>
-                {form.comboId && (
+
+                {form.comboId === '__new__' && (
+                  <div className="p-3 bg-toss-blueLight rounded-xl space-y-2">
+                    <input
+                      value={(form as any).newComboName ?? ''}
+                      onChange={e => setForm(f => ({ ...f, newComboName: e.target.value } as any))}
+                      placeholder="콤보 이름 (예: 영화보기 콤보)"
+                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white"
+                    />
+                    <input
+                      value={(form as any).newComboKeyword ?? ''}
+                      onChange={e => setForm(f => ({ ...f, newComboKeyword: e.target.value } as any))}
+                      placeholder="대표 키워드 (예: 영화보기)"
+                      className="w-full px-3 py-2 rounded-lg border border-toss-gray200 text-sm focus:outline-none focus:ring-2 focus:ring-toss-blue/20 bg-white"
+                    />
+                  </div>
+                )}
+
+                {form.comboId && form.comboId !== '__new__' && (
+                  <div>
+                    <label className="block text-xs text-toss-gray600 mb-1">콤보 내 순서 (1–3)</label>
+                    <div className="flex gap-2">
+                      {[1, 2, 3].map(n => (
+                        <button key={n} onClick={() => setForm(f => ({ ...f, comboOrder: String(n) }))}
+                          className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition-all ${form.comboOrder === String(n) ? 'bg-toss-blue text-white border-toss-blue' : 'bg-toss-gray50 text-toss-gray600 border-transparent'}`}>
+                          {n}번째
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {form.comboId === '__new__' && (
                   <div>
                     <label className="block text-xs text-toss-gray600 mb-1">콤보 내 순서 (1–3)</label>
                     <div className="flex gap-2">
@@ -309,8 +363,14 @@ export default function QuestionsAdmin() {
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+          {form.category === '돌발' && (
+            <div className="flex items-center gap-2 px-3 py-2.5 bg-orange-50 rounded-xl text-xs text-orange-700">
+              <Icon icon="solar:danger-triangle-bold" className="text-orange-500" />
+              돌발 문제는 출제 시 자동으로 2–3개 연속 출제됩니다.
+            </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button variant="secondary" fullWidth onClick={() => setModalOpen(false)}>취소</Button>

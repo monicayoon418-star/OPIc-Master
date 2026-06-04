@@ -116,7 +116,13 @@ export default function PreviewPage() {
               <div key={i} className="p-3 bg-toss-gray50 rounded-xl">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-bold text-toss-gray500">Q{i + 1}</span>
-                  <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{q.category}</span>
+                  {q.category === '돌발' ? (
+                    <span className="text-xs px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-semibold flex items-center gap-1">
+                      <Icon icon="solar:danger-triangle-bold" className="text-xs" />돌발
+                    </span>
+                  ) : (
+                    <span className="text-xs px-2 py-0.5 bg-toss-blueLight text-toss-blue rounded-full font-semibold">{q.category}</span>
+                  )}
                   <span className="text-xs px-2 py-0.5 bg-toss-gray100 text-toss-gray600 rounded-full">{q.session === 1 ? '1차' : '2차'} 세션</span>
                 </div>
                 <p className="text-sm text-toss-dark">{q.content}</p>
