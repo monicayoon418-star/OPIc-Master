@@ -10,7 +10,7 @@ async function requireAdmin() {
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const { content, category, difficulty, keywords, comboId, comboOrder } = await req.json()
+  const { content, category, difficulty, keywords, comboId, comboOrder, positionStart, positionEnd } = await req.json()
   const q = await prisma.question.update({
     where: { id },
     data: {
@@ -20,6 +20,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       keywords,
       comboId: comboId ?? null,
       comboOrder: comboOrder ?? null,
+      positionStart: positionStart ?? null,
+      positionEnd: positionEnd ?? null,
     },
     include: { combo: { select: { id: true, name: true, keyword: true } } },
   })

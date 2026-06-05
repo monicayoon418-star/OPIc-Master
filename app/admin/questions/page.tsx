@@ -14,6 +14,7 @@ interface Combo { id: string; name: string; keyword: string; questions: Question
 interface Question {
   id: string; content: string; category: string; difficulty: number[]; keywords: string[]
   isActive: boolean; comboId?: string | null; comboOrder?: number | null
+  positionStart?: number | null; positionEnd?: number | null
   combo?: { id: string; name: string; keyword: string } | null
 }
 
@@ -40,6 +41,7 @@ export default function QuestionsAdmin() {
     content: '', category: '', difficulty: [] as number[],
     keywords: [] as string[], comboId: '', comboOrder: '',
     newComboName: '', newComboKeyword: '',
+    positionStart: '', positionEnd: '',
   })
   const [comboForm, setComboForm] = useState({ name: '', keyword: '' })
   const [search, setSearch] = useState('')
@@ -66,7 +68,7 @@ export default function QuestionsAdmin() {
 
   const openNew = () => {
     setEditing(null)
-    setForm({ content: '', category: '', difficulty: [], keywords: [], comboId: '', comboOrder: '', newComboName: '', newComboKeyword: '' })
+    setForm({ content: '', category: '', difficulty: [], keywords: [], comboId: '', comboOrder: '', newComboName: '', newComboKeyword: '', positionStart: '', positionEnd: '' })
     setModalOpen(true)
   }
   const openEdit = (q: Question) => {
@@ -78,6 +80,8 @@ export default function QuestionsAdmin() {
       comboId: q.comboId ?? '',
       comboOrder: q.comboOrder?.toString() ?? '',
       newComboName: '', newComboKeyword: '',
+      positionStart: q.positionStart?.toString() ?? '',
+      positionEnd: q.positionEnd?.toString() ?? '',
     })
     setModalOpen(true)
   }
@@ -104,8 +108,10 @@ export default function QuestionsAdmin() {
     const payload = {
       content: form.content, category: form.category,
       difficulty: form.difficulty, keywords: form.keywords,
-      comboId: form.category === '돌발' ? null : resolvedComboId,
-      comboOrder: form.category === '돌발' ? null : (form.comboOrder ? Number(form.comboOrder) : null),
+      comboId: resolvedComboId,
+      comboOrder: form.comboOrder ? Number(form.comboOrder) : null,
+      positionStart: form.positionStart ? Number(form.positionStart) : null,
+      positionEnd: form.positionEnd ? Number(form.positionEnd) : null,
     }
     const url = editing ? `/api/admin/questions/${editing.id}` : '/api/admin/questions'
     const method = editing ? 'PATCH' : 'POST'
@@ -206,6 +212,7 @@ export default function QuestionsAdmin() {
                   <th className="text-left px-4 py-3 font-semibold w-24">카테고리</th>
                   <th className="text-center px-4 py-3 font-semibold w-20">난이도</th>
                   <th className="text-left px-4 py-3 font-semibold w-32">콤보/타입</th>
+                  <th className="text-center px-4 py-3 font-semibold w-20">위치</th>
                   <th className="w-20 px-4" />
                 </tr>
               </thead>
@@ -224,18 +231,31 @@ export default function QuestionsAdmin() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs">
-                      {q.category === '돌발' ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-semibold">
-                          <Icon icon="solar:danger-triangle-bold" className="text-xs" />돌발
-                        </span>
-                      ) : q.combo ? (
-                        <span className="inline-flex items-center gap-1 text-toss-gray600">
-                          <Icon icon="solar:layers-bold" className="text-toss-blue shrink-0" />
-                          <span className="truncate max-w-[80px]">{q.combo.name}</span>
-                          <span className="text-toss-gray400 shrink-0">#{q.comboOrder}</span>
+                      <div className="flex flex-col gap-1">
+                        {q.category === '돌발' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-semibold w-fit">
+                            <Icon icon="solar:danger-triangle-bold" className="text-xs" />돌발
+                          </span>
+                        )}
+                        {q.combo ? (
+                          <span className="inline-flex items-center gap-1 text-toss-gray600">
+                            <Icon icon="solar:layers-bold" className="text-toss-blue shrink-0" />
+                            <span className="truncate max-w-[80px]">{q.combo.name}</span>
+                            <span className="text-toss-gray400 shrink-0">#{q.comboOrder}</span>
+                          </span>
+                        ) : q.category !== '돌발' && (
+                          <span className="text-toss-gray300">-</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {q.positionStart != null ? (
+                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
+                          <Icon icon="solar:map-point-bold" className="text-xs" />
+                          {q.positionStart}{q.positionEnd && q.positionEnd !== q.positionStart ? `–${q.positionEnd}` : ''}번
                         </span>
                       ) : (
-                        <span className="text-toss-gray300">-</span>
+                        <span className="text-toss-gray300 text-xs">-</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -356,8 +376,7 @@ export default function QuestionsAdmin() {
           </div>
 
           {/* 콤보 설정 */}
-          {form.category !== '돌발' && (
-            <div>
+          <div>
               <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">
                 콤보 설정 <span className="text-toss-gray400 font-normal text-xs">(선택사항)</span>
               </label>
@@ -397,14 +416,37 @@ export default function QuestionsAdmin() {
                   </div>
                 )}
               </div>
+              {form.category === '돌발' && (
+                <div className="flex items-center gap-2 px-3 py-2.5 bg-orange-50 rounded-xl text-xs text-orange-700">
+                  <Icon icon="solar:danger-triangle-bold" className="text-orange-500" />
+                  돌발 문제는 콤보로 묶어 2–3개 연속 출제할 수 있습니다.
+                </div>
+              )}
+          </div>
+          {/* 출제 위치 고정 */}
+          <div>
+            <label className="block text-sm font-semibold text-toss-gray700 mb-1.5">
+              출제 위치 <span className="text-toss-gray400 font-normal text-xs">(선택사항 · 1–15번)</span>
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number" min={1} max={15}
+                value={form.positionStart}
+                onChange={e => setForm(f => ({ ...f, positionStart: e.target.value }))}
+                placeholder="시작"
+                className="w-full px-3 py-2 rounded-xl border border-toss-gray200 text-sm text-center focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
+              />
+              <span className="text-toss-gray400 shrink-0 text-sm">~</span>
+              <input
+                type="number" min={1} max={15}
+                value={form.positionEnd}
+                onChange={e => setForm(f => ({ ...f, positionEnd: e.target.value }))}
+                placeholder="끝"
+                className="w-full px-3 py-2 rounded-xl border border-toss-gray200 text-sm text-center focus:outline-none focus:ring-2 focus:ring-toss-blue/20"
+              />
             </div>
-          )}
-          {form.category === '돌발' && (
-            <div className="flex items-center gap-2 px-3 py-2.5 bg-orange-50 rounded-xl text-xs text-orange-700">
-              <Icon icon="solar:danger-triangle-bold" className="text-orange-500" />
-              돌발 문제는 출제 시 자동으로 2–3개 연속 출제됩니다.
-            </div>
-          )}
+            <p className="text-xs text-toss-gray400 mt-1.5">예) 자기소개: 1~1 / 롤플레이: 12~15. 비워두면 무작위 배치.</p>
+          </div>
 
           <div className="flex gap-3 pt-2">
             <Button variant="secondary" fullWidth onClick={() => setModalOpen(false)}>취소</Button>

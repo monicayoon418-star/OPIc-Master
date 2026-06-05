@@ -69,17 +69,19 @@ model QuestionCombo {
 }
 
 model Question {
-  id         String         @id @default(cuid())
-  content    String         @db.Text
-  category   String
-  difficulty Int[]
-  keywords   String[]
-  isActive   Boolean        @default(true)
-  comboId    String?
-  comboOrder Int?
-  combo      QuestionCombo? @relation(fields: [comboId], references: [id], onDelete: SetNull)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id            String         @id @default(cuid())
+  content       String         @db.Text
+  category      String
+  difficulty    Int[]
+  keywords      String[]
+  isActive      Boolean        @default(true)
+  comboId       String?
+  comboOrder    Int?
+  positionStart Int?
+  positionEnd   Int?
+  combo         QuestionCombo? @relation(fields: [comboId], references: [id], onDelete: SetNull)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model GeneratedSet {
