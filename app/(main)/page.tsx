@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
-import BouncingSpheres from '@/components/ui/BouncingSpheres'
+import HeroBackground from '@/components/ui/HeroBackground'
 import { formatDate } from '@/lib/utils'
 
 const HOW_IT_WORKS = [
@@ -39,24 +39,8 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-white overflow-hidden px-4">
-        <BouncingSpheres />
-
-        {/* 텍스트 뒤 고정 구 */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: '50%',
-            top: '50%',
-            width: '1000px',
-            height: '1000px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 50% 50%, #818cf8 0%, #818cf8cc 30%, #818cf855 60%, transparent 78%)',
-            filter: 'blur(60px)',
-            zIndex: 0,
-            animation: 'blob-undulate 7s ease-in-out infinite',
-          }}
-        />
+      <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-[#020b1c] overflow-hidden px-4">
+        <HeroBackground />
 
         {/* 중앙 콘텐츠 */}
         <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
@@ -102,7 +86,7 @@ export default function LandingPage() {
           {/* 면책 고지 */}
           <p
             className="reveal text-center keep-all"
-            style={{ transitionDelay: '320ms', fontSize: '11px', color: '#525D6F', maxWidth: '420px', lineHeight: '1.6', marginTop: '20px' }}
+            style={{ transitionDelay: '320ms', fontSize: '11px', color: 'rgba(255,255,255,0.38)', maxWidth: '420px', lineHeight: '1.6', marginTop: '20px' }}
           >
             본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
           </p>
