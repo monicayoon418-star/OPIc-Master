@@ -42,43 +42,41 @@ export default function LandingPage() {
       <section className="relative min-h-screen -mt-16 flex flex-col justify-center bg-[#020b1c] overflow-hidden px-4">
         <HeroBackground />
 
-        {/* 좌측 콘텐츠 */}
-        <div className="relative z-10 flex flex-col items-start max-w-7xl mx-auto w-full px-8 md:px-16 lg:px-24">
+        {/* 콘텐츠 — 좌우 분리, 수직 중앙 */}
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto w-full px-8 md:px-16 lg:px-24 gap-12">
 
-          {/* 메인 타이틀 */}
-          <h1
-            className="reveal font-bold text-white leading-[1.08] keep-all"
-            style={{ transitionDelay: '80ms', fontSize: '52px', letterSpacing: '-0.03em', marginBottom: '16px' }}
-          >
-            OPIc Example
-          </h1>
+          {/* 좌측: 타이틀 + 설명 + 면책 고지 */}
+          <div className="flex flex-col items-start">
+            <h1
+              className="reveal font-bold text-white leading-[1.08] keep-all"
+              style={{ transitionDelay: '80ms', fontSize: '52px', letterSpacing: '-0.03em', marginBottom: '16px' }}
+            >
+              OPIc Example
+            </h1>
+            <p
+              className="reveal leading-relaxed keep-all"
+              style={{ transitionDelay: '160ms', fontSize: '18px', color: 'rgba(255,255,255,0.85)', fontWeight: 500, marginBottom: '20px' }}
+            >
+              키워드와 목표 등급을 선택하면<br />
+              나만의 맞춤 예상 문제를 즉시 제공합니다.
+            </p>
+            <p
+              className="reveal keep-all"
+              style={{ transitionDelay: '220ms', fontSize: '11px', color: 'rgba(255,255,255,0.35)', maxWidth: '420px', lineHeight: '1.6' }}
+            >
+              본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
+            </p>
+          </div>
 
-          {/* 설명글 */}
-          <p
-            className="reveal leading-relaxed keep-all"
-            style={{ transitionDelay: '160ms', fontSize: '18px', color: 'rgba(255,255,255,0.85)', fontWeight: 500, marginBottom: '20px' }}
-          >
-            키워드와 목표 등급을 선택하면<br />
-            나만의 맞춤 예상 문제를 즉시 제공합니다.
-          </p>
-
-          {/* 면책 고지 */}
-          <p
-            className="reveal keep-all"
-            style={{ transitionDelay: '220ms', fontSize: '11px', color: 'rgba(255,255,255,0.35)', maxWidth: '480px', lineHeight: '1.6', marginBottom: '40px' }}
-          >
-            본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
-          </p>
-
-          {/* 버튼 — 좌측 세로 정렬 */}
+          {/* 우측: 버튼 세로 정렬 */}
           <div
-            className="reveal flex flex-col gap-3"
-            style={{ transitionDelay: '300ms', width: '280px' }}
+            className="reveal flex flex-col gap-4 shrink-0"
+            style={{ transitionDelay: '300ms', width: '420px' }}
           >
             <Link
               href="/exam"
               className="w-full bg-white/5 text-white text-base font-semibold text-center transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
-              style={{ borderRadius: '12px', padding: '20px 0' }}
+              style={{ borderRadius: '12px', padding: '24px 0' }}
             >
               모의문제 생성하기
             </Link>
@@ -87,7 +85,7 @@ export default function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-white/5 text-white text-base font-semibold text-center hover:bg-white/10 transition-all"
-              style={{ borderRadius: '12px', padding: '20px 0' }}
+              style={{ borderRadius: '12px', padding: '24px 0' }}
             >
               오픽 공홈 바로가기
             </a>
