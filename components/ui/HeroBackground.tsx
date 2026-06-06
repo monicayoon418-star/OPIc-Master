@@ -22,7 +22,7 @@ export default function HeroBackground() {
           background:
             'radial-gradient(ellipse 75% 55% at 20% 80%, rgba(140,200,255,0.55) 0%, rgba(80,160,255,0.3) 30%, transparent 62%)',
           filter: 'blur(22px)',
-          animation: 'hbg-beam 18s ease-in-out infinite',
+          animation: 'hbg-beam 8s ease-in-out infinite',
         }}
       />
 
@@ -42,7 +42,7 @@ export default function HeroBackground() {
           height: '48%',
           background:
             'radial-gradient(ellipse 110% 85% at 8% 100%, rgba(25,95,255,0.82) 0%, rgba(15,55,190,0.45) 38%, transparent 68%)',
-          animation: 'hbg-wave1 8s ease-in-out infinite',
+          animation: 'hbg-wave1 4s ease-in-out infinite',
         }}
       />
 
@@ -53,7 +53,7 @@ export default function HeroBackground() {
           height: '38%',
           background:
             'radial-gradient(ellipse 80% 90% at 45% 100%, rgba(18,70,210,0.6) 0%, rgba(10,45,160,0.3) 48%, transparent 72%)',
-          animation: 'hbg-wave2 11s ease-in-out infinite 1.2s',
+          animation: 'hbg-wave2 5s ease-in-out infinite 0.6s',
         }}
       />
 
@@ -64,7 +64,7 @@ export default function HeroBackground() {
           height: '32%',
           background:
             'radial-gradient(ellipse 55% 75% at 22% 100%, rgba(100,185,255,0.48) 0%, rgba(55,130,255,0.2) 50%, transparent 75%)',
-          animation: 'hbg-wave3 13s ease-in-out infinite 2.5s',
+          animation: 'hbg-wave3 3.5s ease-in-out infinite 1s',
         }}
       />
 
@@ -75,7 +75,7 @@ export default function HeroBackground() {
           height: '28%',
           background:
             'radial-gradient(ellipse 60% 80% at 72% 100%, rgba(40,110,240,0.42) 0%, rgba(20,65,180,0.18) 50%, transparent 72%)',
-          animation: 'hbg-wave4 10s ease-in-out infinite 0.8s',
+          animation: 'hbg-wave4 4.5s ease-in-out infinite 0.3s',
         }}
       />
 

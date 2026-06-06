@@ -69,7 +69,7 @@ export default function LandingPage() {
           >
             <Link
               href="/exam"
-              className="bg-toss-dark hover:bg-toss-gray800 text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-white/20 border border-white text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all hover:bg-white/30 hover:scale-[1.02] active:scale-[0.98]"
             >
               모의문제 생성하기
             </Link>
@@ -77,7 +77,7 @@ export default function LandingPage() {
               href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white border border-toss-gray200 text-toss-dark px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-toss-gray50 transition-all"
+              className="bg-transparent border border-white text-white px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-white/10 transition-all"
             >
               오픽 공홈 바로가기
             </a>
