@@ -39,24 +39,24 @@ export default function LandingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen -mt-16 flex flex-col items-center justify-center bg-[#020b1c] overflow-hidden px-4">
+      <section className="relative min-h-screen -mt-16 flex flex-col justify-center bg-[#020b1c] overflow-hidden px-4">
         <HeroBackground />
 
-        {/* 중앙 콘텐츠 */}
-        <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
+        {/* 좌측 콘텐츠 */}
+        <div className="relative z-10 flex flex-col items-start max-w-7xl mx-auto w-full px-8 md:px-16 lg:px-24">
 
           {/* 메인 타이틀 */}
           <h1
-            className="reveal font-semibold text-white leading-[1.1] keep-all"
-            style={{ transitionDelay: '80ms', fontSize: '40px', letterSpacing: '-0.025em', marginBottom: '12px' }}
+            className="reveal font-bold text-white leading-[1.08] keep-all"
+            style={{ transitionDelay: '80ms', fontSize: '52px', letterSpacing: '-0.03em', marginBottom: '16px' }}
           >
             OPIc Example
           </h1>
 
           {/* 설명글 */}
           <p
-            className="reveal leading-relaxed mb-10 keep-all font-normal"
-            style={{ transitionDelay: '160ms', fontSize: '16px', color: 'rgba(255,255,255,0.90)', fontWeight: 500 }}
+            className="reveal leading-relaxed mb-10 keep-all"
+            style={{ transitionDelay: '160ms', fontSize: '18px', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}
           >
             키워드와 목표 등급을 선택하면<br />
             나만의 맞춤 예상 문제를 즉시 제공합니다.
@@ -69,7 +69,8 @@ export default function LandingPage() {
           >
             <Link
               href="/exam"
-              className="bg-white/5 text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-white/5 text-white px-9 py-4 text-base font-semibold transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
+              style={{ borderRadius: '12px' }}
             >
               모의문제 생성하기
             </Link>
@@ -77,7 +78,8 @@ export default function LandingPage() {
               href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white/5 text-white px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-white/10 transition-all"
+              className="bg-white/5 text-white px-9 py-4 text-base font-semibold hover:bg-white/10 transition-all"
+              style={{ borderRadius: '12px' }}
             >
               오픽 공홈 바로가기
             </a>
@@ -85,8 +87,8 @@ export default function LandingPage() {
 
           {/* 면책 고지 */}
           <p
-            className="reveal text-center keep-all"
-            style={{ transitionDelay: '320ms', fontSize: '11px', color: 'rgba(255,255,255,0.38)', maxWidth: '420px', lineHeight: '1.6', marginTop: '20px' }}
+            className="reveal keep-all"
+            style={{ transitionDelay: '320ms', fontSize: '11px', color: 'rgba(255,255,255,0.35)', maxWidth: '480px', lineHeight: '1.6', marginTop: '24px' }}
           >
             본 서비스는 OPIc 공식 서비스와 무관한 독립 학습 플랫폼입니다. OPIc은 ACTFL이 개발하고 YBM이 운영하는 공인 영어 말하기 시험입니다.
           </p>
@@ -95,7 +97,7 @@ export default function LandingPage() {
         {/* 스크롤 화살표 */}
         <button
           onClick={scrollToNext}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-toss-gray400 hover:text-toss-blue transition-colors"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors"
         >
           <span className="text-xs tracking-widest">SCROLL</span>
           <Icon icon="solar:arrow-down-linear" className="text-xl animate-bounce" />
