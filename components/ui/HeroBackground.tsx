@@ -35,47 +35,58 @@ export default function HeroBackground() {
         }}
       />
 
-      {/* Wave layer 1 */}
+      {/* Wave layer 1 — wide center sweep */}
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{
-          height: '48%',
+          height: '55%',
           background:
-            'radial-gradient(ellipse 110% 85% at 8% 100%, rgba(25,95,255,0.82) 0%, rgba(15,55,190,0.45) 38%, transparent 68%)',
+            'radial-gradient(ellipse 120% 80% at 50% 100%, rgba(25,95,255,0.75) 0%, rgba(15,55,190,0.35) 45%, transparent 70%)',
           animation: 'hbg-wave1 4s ease-in-out infinite',
         }}
       />
 
-      {/* Wave layer 2 */}
+      {/* Wave layer 2 — left aurora arm */}
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{
-          height: '38%',
+          height: '42%',
           background:
-            'radial-gradient(ellipse 80% 90% at 45% 100%, rgba(18,70,210,0.6) 0%, rgba(10,45,160,0.3) 48%, transparent 72%)',
+            'radial-gradient(ellipse 70% 90% at 20% 100%, rgba(18,70,210,0.65) 0%, rgba(10,45,160,0.3) 50%, transparent 72%)',
           animation: 'hbg-wave2 5s ease-in-out infinite 0.6s',
         }}
       />
 
-      {/* Wave layer 3 — shimmer highlight */}
+      {/* Wave layer 3 — right aurora arm */}
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{
-          height: '32%',
+          height: '42%',
           background:
-            'radial-gradient(ellipse 55% 75% at 22% 100%, rgba(100,185,255,0.48) 0%, rgba(55,130,255,0.2) 50%, transparent 75%)',
-          animation: 'hbg-wave3 3.5s ease-in-out infinite 1s',
+            'radial-gradient(ellipse 70% 90% at 80% 100%, rgba(18,70,210,0.55) 0%, rgba(10,45,160,0.25) 50%, transparent 72%)',
+          animation: 'hbg-wave3 5s ease-in-out infinite 1.2s',
         }}
       />
 
-      {/* Wave layer 4 — rightward counter-wave */}
+      {/* Wave layer 4 — shimmer highlight, center-left */}
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{
-          height: '28%',
+          height: '35%',
           background:
-            'radial-gradient(ellipse 60% 80% at 72% 100%, rgba(40,110,240,0.42) 0%, rgba(20,65,180,0.18) 50%, transparent 72%)',
-          animation: 'hbg-wave4 4.5s ease-in-out infinite 0.3s',
+            'radial-gradient(ellipse 90% 70% at 40% 100%, rgba(100,185,255,0.42) 0%, rgba(55,130,255,0.18) 50%, transparent 75%)',
+          animation: 'hbg-wave4 3.5s ease-in-out infinite 0.3s',
+        }}
+      />
+
+      {/* Wave layer 5 — shimmer highlight, center-right */}
+      <div
+        className="absolute bottom-0 left-0 right-0"
+        style={{
+          height: '30%',
+          background:
+            'radial-gradient(ellipse 80% 65% at 65% 100%, rgba(80,160,255,0.35) 0%, rgba(40,110,220,0.15) 50%, transparent 75%)',
+          animation: 'hbg-wave5 4s ease-in-out infinite 1.8s',
         }}
       />
 
