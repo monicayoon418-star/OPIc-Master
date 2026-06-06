@@ -1,94 +1,60 @@
 'use client'
 
+// Blobs are intentionally oversized (160-180% viewport) so edges never clip while translating.
 export default function HeroBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: '#020b1c' }}>
+    <div className="absolute inset-0 overflow-hidden" style={{ background: '#03091e' }}>
 
-      {/* Base blue radial — bottom-left vivid blue */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 130% 95% at -10% 108%, rgba(30,100,255,0.95) 0%, rgba(15,55,180,0.65) 28%, rgba(5,20,80,0.3) 55%, transparent 72%)',
-          animation: 'hbg-base 14s ease-in-out infinite',
-        }}
-      />
+      {/* Blob A — white/pale-blue, bright top region */}
+      <div className="absolute" style={{
+        width: '180%', height: '140%',
+        top: '-50%', left: '-40%',
+        background: 'radial-gradient(ellipse 45% 50% at 48% 42%, rgba(210,230,255,0.60) 0%, rgba(150,195,255,0.35) 35%, transparent 62%)',
+        filter: 'blur(50px)',
+        animation: 'hbg-blob-a 9s ease-in-out infinite',
+      }} />
 
-      {/* Diagonal beam — the bright sweep in the image */}
-      <div
-        className="absolute"
-        style={{
-          inset: 0,
-          background:
-            'radial-gradient(ellipse 75% 55% at 20% 80%, rgba(140,200,255,0.55) 0%, rgba(80,160,255,0.3) 30%, transparent 62%)',
-          filter: 'blur(22px)',
-          animation: 'hbg-beam 8s ease-in-out infinite',
-        }}
-      />
+      {/* Blob B — vivid cobalt blue, center-left */}
+      <div className="absolute" style={{
+        width: '180%', height: '150%',
+        top: '-25%', left: '-50%',
+        background: 'radial-gradient(ellipse 52% 58% at 42% 54%, rgba(25,85,255,0.88) 0%, rgba(12,50,200,0.55) 42%, transparent 68%)',
+        filter: 'blur(35px)',
+        animation: 'hbg-blob-b 12s ease-in-out infinite 1s',
+      }} />
 
-      {/* Top-right dark vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 55% at 95% 2%, rgba(0,3,12,0.92) 0%, rgba(0,5,20,0.5) 45%, transparent 70%)',
-        }}
-      />
+      {/* Blob C — mid-blue, center sweep */}
+      <div className="absolute" style={{
+        width: '170%', height: '130%',
+        top: '-15%', left: '-35%',
+        background: 'radial-gradient(ellipse 38% 48% at 56% 52%, rgba(40,100,240,0.65) 0%, rgba(18,60,180,0.32) 46%, transparent 70%)',
+        filter: 'blur(40px)',
+        animation: 'hbg-blob-c 7s ease-in-out infinite 2s',
+      }} />
 
-      {/* Wave layer 1 — wide center sweep */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: '55%',
-          background:
-            'radial-gradient(ellipse 120% 80% at 50% 100%, rgba(25,95,255,0.75) 0%, rgba(15,55,190,0.35) 45%, transparent 70%)',
-          animation: 'hbg-wave1 4s ease-in-out infinite',
-        }}
-      />
+      {/* Blob D — deep navy, counter-moves right */}
+      <div className="absolute" style={{
+        width: '160%', height: '140%',
+        top: '-20%', left: '-10%',
+        background: 'radial-gradient(ellipse 40% 45% at 62% 60%, rgba(8,30,120,0.7) 0%, rgba(4,15,70,0.4) 45%, transparent 68%)',
+        filter: 'blur(45px)',
+        animation: 'hbg-blob-d 10s ease-in-out infinite 0.5s',
+      }} />
 
-      {/* Wave layer 2 — left aurora arm */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: '42%',
-          background:
-            'radial-gradient(ellipse 70% 90% at 20% 100%, rgba(18,70,210,0.65) 0%, rgba(10,45,160,0.3) 50%, transparent 72%)',
-          animation: 'hbg-wave2 5s ease-in-out infinite 0.6s',
-        }}
-      />
+      {/* Blob E — light shimmer, roaming highlight */}
+      <div className="absolute" style={{
+        width: '160%', height: '130%',
+        top: '-30%', left: '-30%',
+        background: 'radial-gradient(ellipse 28% 35% at 50% 45%, rgba(170,210,255,0.45) 0%, rgba(100,170,255,0.2) 40%, transparent 65%)',
+        filter: 'blur(55px)',
+        animation: 'hbg-blob-e 15s ease-in-out infinite 3s',
+      }} />
 
-      {/* Wave layer 3 — right aurora arm */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: '42%',
-          background:
-            'radial-gradient(ellipse 70% 90% at 80% 100%, rgba(18,70,210,0.55) 0%, rgba(10,45,160,0.25) 50%, transparent 72%)',
-          animation: 'hbg-wave3 5s ease-in-out infinite 1.2s',
-        }}
-      />
-
-      {/* Wave layer 4 — shimmer highlight, center-left */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: '35%',
-          background:
-            'radial-gradient(ellipse 90% 70% at 40% 100%, rgba(100,185,255,0.42) 0%, rgba(55,130,255,0.18) 50%, transparent 75%)',
-          animation: 'hbg-wave4 3.5s ease-in-out infinite 0.3s',
-        }}
-      />
-
-      {/* Wave layer 5 — shimmer highlight, center-right */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: '30%',
-          background:
-            'radial-gradient(ellipse 80% 65% at 65% 100%, rgba(80,160,255,0.35) 0%, rgba(40,110,220,0.15) 50%, transparent 75%)',
-          animation: 'hbg-wave5 4s ease-in-out infinite 1.8s',
-        }}
-      />
+      {/* Bottom fade to dark */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{
+        height: '30%',
+        background: 'linear-gradient(to top, rgba(2,6,20,0.85) 0%, transparent 100%)',
+      }} />
 
     </div>
   )

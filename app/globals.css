@@ -81,49 +81,49 @@
   100% { background: #d8ecff; opacity: 0.45; }
 }
 
-/* Hero background animations */
-@keyframes hbg-base {
-  0%   { opacity: 1;    transform: scale(1); }
-  50%  { opacity: 0.88; transform: scale(1.04) translateX(1%); }
-  100% { opacity: 1;    transform: scale(1); }
+/* Hero background blob animations — each blob follows a unique X+Y path */
+@keyframes hbg-blob-a {
+  0%   { transform: translate(0%,   0%)   scale(1.00); opacity: 0.90; }
+  15%  { transform: translate(7%,  -8%)   scale(1.06); opacity: 1.00; }
+  35%  { transform: translate(-6%,  5%)   scale(0.94); opacity: 0.82; }
+  55%  { transform: translate(10%,  3%)   scale(1.08); opacity: 0.95; }
+  75%  { transform: translate(-4%, -6%)   scale(0.97); opacity: 0.88; }
+  100% { transform: translate(0%,   0%)   scale(1.00); opacity: 0.90; }
 }
 
-@keyframes hbg-beam {
-  0%   { opacity: 0.9;  transform: translate(0, 0) rotate(-6deg); }
-  25%  { opacity: 1;    transform: translate(8%, -4%) rotate(-2deg); }
-  50%  { opacity: 0.78; transform: translate(-4%, 5%) rotate(-11deg); }
-  75%  { opacity: 1;    transform: translate(9%, -2%) rotate(-3deg); }
-  100% { opacity: 0.9;  transform: translate(0, 0) rotate(-6deg); }
+@keyframes hbg-blob-b {
+  0%   { transform: translate(0%,   0%)   scale(1.00); opacity: 0.92; }
+  20%  { transform: translate(-8%,  6%)   scale(1.05); opacity: 0.80; }
+  40%  { transform: translate(9%,  -4%)   scale(1.10); opacity: 1.00; }
+  60%  { transform: translate(-3%,  9%)   scale(0.92); opacity: 0.85; }
+  80%  { transform: translate(6%,  -7%)   scale(1.04); opacity: 0.95; }
+  100% { transform: translate(0%,   0%)   scale(1.00); opacity: 0.92; }
 }
 
-@keyframes hbg-wave1 {
-  0%   { transform: translateX(-8%) scaleX(1);    opacity: 0.88; }
-  50%  { transform: translateX(8%)  scaleX(1.18); opacity: 1; }
-  100% { transform: translateX(-8%) scaleX(1);    opacity: 0.88; }
+@keyframes hbg-blob-c {
+  0%   { transform: translate(0%,   0%)   scale(1.00); opacity: 0.85; }
+  25%  { transform: translate(5%,   7%)   scale(0.93); opacity: 1.00; }
+  50%  { transform: translate(-9%,  -3%)  scale(1.12); opacity: 0.78; }
+  75%  { transform: translate(4%,   8%)   scale(0.96); opacity: 0.90; }
+  100% { transform: translate(0%,   0%)   scale(1.00); opacity: 0.85; }
 }
 
-@keyframes hbg-wave2 {
-  0%   { transform: translateX(6%)  scaleX(1.1);  opacity: 0.82; }
-  50%  { transform: translateX(-9%) scaleX(0.9);  opacity: 1; }
-  100% { transform: translateX(6%)  scaleX(1.1);  opacity: 0.82; }
+@keyframes hbg-blob-d {
+  0%   { transform: translate(0%,   0%)   scale(1.00); opacity: 0.80; }
+  18%  { transform: translate(-5%,  -9%)  scale(1.07); opacity: 0.70; }
+  42%  { transform: translate(8%,   4%)   scale(0.95); opacity: 0.88; }
+  65%  { transform: translate(-6%,  7%)   scale(1.09); opacity: 0.75; }
+  85%  { transform: translate(4%,  -5%)   scale(0.98); opacity: 0.82; }
+  100% { transform: translate(0%,   0%)   scale(1.00); opacity: 0.80; }
 }
 
-@keyframes hbg-wave3 {
-  0%   { transform: translateX(5%)  scaleX(0.92); opacity: 0.6; }
-  50%  { transform: translateX(-8%) scaleX(1.25); opacity: 1; }
-  100% { transform: translateX(5%)  scaleX(0.92); opacity: 0.6; }
-}
-
-@keyframes hbg-wave4 {
-  0%   { transform: translateX(-6%) scaleX(0.94); opacity: 0.68; }
-  50%  { transform: translateX(7%)  scaleX(1.22); opacity: 0.95; }
-  100% { transform: translateX(-6%) scaleX(0.94); opacity: 0.68; }
-}
-
-@keyframes hbg-wave5 {
-  0%   { transform: translateX(8%)  scaleX(0.9);  opacity: 0.55; }
-  50%  { transform: translateX(-9%) scaleX(1.18); opacity: 0.9; }
-  100% { transform: translateX(8%)  scaleX(0.9);  opacity: 0.55; }
+@keyframes hbg-blob-e {
+  0%   { transform: translate(0%,   0%)   scale(1.00); opacity: 0.70; }
+  22%  { transform: translate(10%,  -6%)  scale(1.14); opacity: 0.90; }
+  48%  { transform: translate(-7%,  8%)   scale(0.88); opacity: 0.60; }
+  70%  { transform: translate(5%,  -10%)  scale(1.10); opacity: 0.85; }
+  88%  { transform: translate(-9%,  3%)   scale(0.95); opacity: 0.65; }
+  100% { transform: translate(0%,   0%)   scale(1.00); opacity: 0.70; }
 }
 
 @layer utilities {
