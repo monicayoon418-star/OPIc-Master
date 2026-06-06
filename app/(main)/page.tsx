@@ -62,27 +62,29 @@ export default function LandingPage() {
             나만의 맞춤 예상 문제를 즉시 제공합니다.
           </p>
 
-          {/* 버튼 */}
+          {/* 버튼 — 우측 정렬 */}
           <div
-            className="reveal flex flex-col sm:flex-row gap-3"
+            className="reveal w-full flex justify-end"
             style={{ transitionDelay: '240ms' }}
           >
-            <Link
-              href="/exam"
-              className="bg-white/5 text-white px-9 py-4 text-base font-semibold transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
-              style={{ borderRadius: '12px' }}
-            >
-              모의문제 생성하기
-            </Link>
-            <a
-              href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white/5 text-white px-9 py-4 text-base font-semibold hover:bg-white/10 transition-all"
-              style={{ borderRadius: '12px' }}
-            >
-              오픽 공홈 바로가기
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/exam"
+                className="bg-white/5 text-white px-12 py-5 text-base font-semibold transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
+                style={{ borderRadius: '12px' }}
+              >
+                모의문제 생성하기
+              </Link>
+              <a
+                href="https://www.opic.or.kr/opics/jsp/view/index.jsp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/5 text-white px-12 py-5 text-base font-semibold hover:bg-white/10 transition-all"
+                style={{ borderRadius: '12px' }}
+              >
+                오픽 공홈 바로가기
+              </a>
+            </div>
           </div>
 
           {/* 면책 고지 */}
