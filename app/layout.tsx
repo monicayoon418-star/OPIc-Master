@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/lib/auth'
+import MixpanelProvider from '@/components/providers/MixpanelProvider'
 
 export const metadata: Metadata = {
   title: 'OPIc Example | AI 유사 기출문제 생성',
@@ -15,7 +16,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ko">
       <body>
-        <SessionProvider session={session}>{children}</SessionProvider>
+        <SessionProvider session={session}>
+          <MixpanelProvider>{children}</MixpanelProvider>
+        </SessionProvider>
       </body>
     </html>
   )

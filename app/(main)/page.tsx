@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import HeroBackground from '@/components/ui/HeroBackground'
 import { formatDate } from '@/lib/utils'
+import { trackEvent } from '@/lib/mixpanel'
 
 const HOW_IT_WORKS = [
   { step: '01', icon: 'solar:settings-bold-duotone', title: '난이도 & 키워드 설정', desc: '나의 직업, 취미, 관심사를 선택하고 목표 등급을 설정합니다.' },
@@ -77,6 +78,7 @@ export default function LandingPage() {
               href="/exam"
               className="w-full bg-white/5 text-white text-base font-semibold text-center transition-all hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98]"
               style={{ borderRadius: '12px', padding: '24px 0' }}
+              onClick={() => trackEvent('Hero CTA Clicked', { button: '모의문제 생성하기' })}
             >
               모의문제 생성하기
             </Link>
@@ -86,6 +88,7 @@ export default function LandingPage() {
               rel="noopener noreferrer"
               className="w-full bg-white/5 text-white text-base font-semibold text-center hover:bg-white/10 transition-all"
               style={{ borderRadius: '12px', padding: '24px 0' }}
+              onClick={() => trackEvent('Hero CTA Clicked', { button: '오픽 공홈 바로가기' })}
             >
               오픽 공홈 바로가기
             </a>
@@ -191,7 +194,11 @@ export default function LandingPage() {
             <div className="reveal text-center py-16 bg-toss-gray50 rounded-3xl">
               <Icon icon="solar:chat-round-bold-duotone" className="text-5xl text-toss-gray300 mx-auto mb-4 block" />
               <p className="text-toss-gray500 mb-4">아직 작성된 후기가 없습니다</p>
-              <Link href="/community/reviews/new" className="inline-flex items-center gap-2 bg-toss-blue text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-toss-blueHover transition-colors">
+              <Link
+                href="/community/reviews/new"
+                className="inline-flex items-center gap-2 bg-toss-blue text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-toss-blueHover transition-colors"
+                onClick={() => trackEvent('CTA Clicked', { button: '첫 후기 작성하기', section: 'community' })}
+              >
                 첫 후기 작성하기
               </Link>
             </div>

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Icon } from '@iconify/react'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
+import { trackEvent } from '@/lib/mixpanel'
 
 const NAV_ITEMS = [
   { href: '/guide', label: '오픽 가이드' },
@@ -46,6 +47,7 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => trackEvent('Nav Clicked', { label: item.label, href: item.href })}
                 className={`px-4 py-2 rounded-xl text-base font-semibold transition-all duration-500 hover:text-lg hover:font-bold ${
                   pathname.startsWith(item.href)
                     ? transparent ? 'text-white' : 'text-toss-blue'
@@ -78,7 +80,11 @@ export default function Navigation() {
                 </button>
               </>
             ) : (
-              <Link href="/login" className={`text-base font-semibold transition-colors duration-500 ${transparent ? 'text-white/75 hover:text-white' : 'text-toss-gray700 hover:text-toss-dark'}`}>
+              <Link
+                href="/login"
+                onClick={() => trackEvent('Nav Clicked', { label: '로그인', href: '/login' })}
+                className={`text-base font-semibold transition-colors duration-500 ${transparent ? 'text-white/75 hover:text-white' : 'text-toss-gray700 hover:text-toss-dark'}`}
+              >
                 로그인
               </Link>
             )}
