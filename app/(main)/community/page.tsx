@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/db'
 import { auth } from '@/lib/auth'
-import { Icon } from '@iconify/react'
 import Link from 'next/link'
-import PostCard from '@/components/community/PostCard'
+import PostCard, { PostTableHeader } from '@/components/community/PostCard'
 import WriteButton from './WriteButton'
 
 export default async function CommunityPage({
@@ -17,18 +16,22 @@ export default async function CommunityPage({
 
   const typeFilter = type === 'REVIEW' ? 'REVIEW' : type === 'STUDY' ? 'STUDY' : undefined
   const order = sort === 'asc' ? 'asc' : 'desc'
+  const baseWhere = { deletedAt: null, ...(typeFilter ? { type: typeFilter as any } : {}) }
 
-  const where = { deletedAt: null, ...(typeFilter ? { type: typeFilter as any } : {}) }
-
-  const [posts, total] = await Promise.all([
+  const [pinnedPosts, posts, total] = await Promise.all([
     prisma.post.findMany({
-      where,
+      where: { ...baseWhere, isPinned: true },
+      include: { user: { select: { id: true, nickname: true } }, _count: { select: { comments: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.post.findMany({
+      where: { ...baseWhere, isPinned: false },
       include: { user: { select: { id: true, nickname: true } }, _count: { select: { comments: true } } },
       orderBy: { createdAt: order },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.post.count({ where }),
+    prisma.post.count({ where: { ...baseWhere, isPinned: false } }),
   ])
 
   const totalPages = Math.ceil(total / pageSize)
@@ -43,7 +46,7 @@ export default async function CommunityPage({
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-toss-dark">커뮤니티</h1>
@@ -53,8 +56,7 @@ export default async function CommunityPage({
       </div>
 
       {/* 필터 + 정렬 */}
-      <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-        {/* 타입 필터 */}
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex gap-2">
           {[
             { label: '전체', value: '' },
@@ -74,8 +76,6 @@ export default async function CommunityPage({
             </Link>
           ))}
         </div>
-
-        {/* 정렬 */}
         <div className="flex gap-2">
           {[
             { label: '최신순', value: 'desc' },
@@ -96,40 +96,41 @@ export default async function CommunityPage({
         </div>
       </div>
 
-      {/* 게시글 목록 */}
-      <div className="bg-white border border-toss-gray100 rounded-2xl overflow-hidden mb-6">
-        {posts.length === 0 ? (
-          <div className="py-16 text-center text-toss-gray400">
-            <Icon icon="solar:document-add-bold-duotone" className="text-4xl mx-auto mb-3 block" />
-            <p>아직 작성된 글이 없습니다.</p>
+      {/* 게시판 테이블 */}
+      <div className="bg-white border border-toss-gray200 rounded-xl overflow-hidden mb-6">
+        <PostTableHeader showType />
+
+        {pinnedPosts.length === 0 && posts.length === 0 ? (
+          <div className="py-16 text-center text-toss-gray400 text-sm">
+            아직 작성된 글이 없습니다.
           </div>
         ) : (
-          posts.map(post => {
-            const href = post.type === 'REVIEW'
-              ? `/community/reviews/${post.id}`
-              : `/community/study-tips/${post.id}`
-            return (
-              <div key={post.id} className="relative">
-                <span className={`absolute top-5 right-5 text-xs px-2 py-0.5 rounded-full font-semibold ${
-                  post.type === 'REVIEW' ? 'bg-toss-blueLight text-toss-blue' : 'bg-green-100 text-toss-green'
-                }`}>
-                  {post.type === 'REVIEW' ? '시험 후기' : '문제생성 후기'}
-                </span>
-                <PostCard post={post as any} href={href} />
-              </div>
-            )
-          })
+          <>
+            {pinnedPosts.map(post => {
+              const href = post.type === 'REVIEW'
+                ? `/community/reviews/${post.id}`
+                : `/community/study-tips/${post.id}`
+              return <PostCard key={post.id} post={post as any} href={href} showType />
+            })}
+            {posts.map((post, i) => {
+              const href = post.type === 'REVIEW'
+                ? `/community/reviews/${post.id}`
+                : `/community/study-tips/${post.id}`
+              const rowNumber = total - ((page - 1) * pageSize + i)
+              return <PostCard key={post.id} post={post as any} href={href} rowNumber={rowNumber} showType />
+            })}
+          </>
         )}
       </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-1.5">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
             <Link
               key={p}
               href={buildUrl({ page: String(p) })}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-semibold transition-colors ${
+              className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold transition-colors ${
                 p === page ? 'bg-toss-blue text-white' : 'text-toss-gray600 hover:bg-toss-gray100'
               }`}
             >

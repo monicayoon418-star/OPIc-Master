@@ -99,16 +99,18 @@ model GeneratedSet {
 }
 
 model Post {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  type      PostType
-  title     String
-  content   String    @db.Text
-  viewCount Int       @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  type        PostType
+  title       String
+  content     String    @db.Text
+  viewCount   Int       @default(0)
+  isAnonymous Boolean   @default(false)
+  isPinned    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   comments Comment[]
   savedBy  SavedItem[]

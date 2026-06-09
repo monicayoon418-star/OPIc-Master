@@ -21,6 +21,16 @@ export function formatDate(dateStr: string) {
   return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+export function formatTableDate(dateStr: string) {
+  const date = new Date(dateStr)
+  const now = new Date()
+  const isThisYear = date.getFullYear() === now.getFullYear()
+  if (isThisYear) {
+    return `${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+  }
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+}
+
 export function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60)
   const s = seconds % 60

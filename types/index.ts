@@ -49,6 +49,8 @@ export interface Post {
   title: string
   content: string
   viewCount: number
+  isAnonymous: boolean
+  isPinned: boolean
   createdAt: string
   updatedAt: string
   _count?: { comments: number }

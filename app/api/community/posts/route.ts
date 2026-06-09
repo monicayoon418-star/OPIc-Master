@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { title, content, type } = await req.json()
+  const { title, content, type, isAnonymous } = await req.json()
   if (!title?.trim() || !content?.trim() || !type) return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
 
   const post = await prisma.post.create({
-    data: { userId: session.user.id, title: title.trim(), content: content.trim(), type },
+    data: { userId: session.user.id, title: title.trim(), content: content.trim(), type, isAnonymous: !!isAnonymous },
   })
 
   return NextResponse.json(post)
