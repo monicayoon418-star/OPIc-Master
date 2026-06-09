@@ -35,7 +35,7 @@ export default async function StudyTipDetailPage({ params }: { params: Promise<{
       <div className="mb-6">
         <Link href="/community/study-tips" className="flex items-center gap-1 text-sm text-toss-gray500 hover:text-toss-dark mb-4">
           <Icon icon="solar:arrow-left-linear" />
-          문제생성 후기 목록
+          공부꿀팁 목록
         </Link>
         <h1 className="text-2xl font-bold text-toss-dark mb-3 keep-all">{post.title}</h1>
         <div className="flex items-center gap-3 text-sm text-toss-gray500">

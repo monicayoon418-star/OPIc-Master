@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils'
 import Button from '@/components/ui/Button'
 
 interface AdminPost {
-  id: string; title: string; type: string; createdAt: string
+  id: string; title: string; type: string; createdAt: string; isPinned: boolean
   user: { nickname: string }; _count: { comments: number }
 }
 
@@ -22,6 +22,15 @@ export default function AdminPostsPage() {
     setPosts(prev => prev.filter(p => p.id !== id))
   }
 
+  const handlePinToggle = async (id: string, current: boolean) => {
+    await fetch(`/api/admin/posts/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isPinned: !current }),
+    })
+    setPosts(prev => prev.map(p => p.id === id ? { ...p, isPinned: !current } : p))
+  }
+
   const filtered = posts.filter(p => type === 'ALL' || p.type === type)
 
   return (
@@ -31,7 +40,7 @@ export default function AdminPostsPage() {
         <div className="flex gap-2">
           {(['ALL', 'REVIEW', 'TIP'] as const).map(t => (
             <button key={t} onClick={() => setType(t)} className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${type === t ? 'bg-toss-blue text-white' : 'bg-toss-gray100 text-toss-gray600 hover:bg-toss-gray200'}`}>
-              {t === 'ALL' ? '전체' : t === 'REVIEW' ? '오픽 후기' : '공부법 후기'}
+              {t === 'ALL' ? '전체' : t === 'REVIEW' ? '오픽 후기' : '공부꿀팁'}
             </button>
           ))}
         </div>
@@ -46,6 +55,7 @@ export default function AdminPostsPage() {
               <th className="text-left px-4 py-3 font-semibold w-24">구분</th>
               <th className="text-center px-4 py-3 font-semibold w-20">댓글</th>
               <th className="text-left px-4 py-3 font-semibold w-32">작성일</th>
+              <th className="text-center px-4 py-3 font-semibold w-20">공지 고정</th>
               <th className="w-16 px-4" />
             </tr>
           </thead>
@@ -61,6 +71,15 @@ export default function AdminPostsPage() {
                 </td>
                 <td className="px-4 py-3 text-center text-toss-gray600">{post._count.comments}</td>
                 <td className="px-4 py-3 text-toss-gray500">{formatDate(post.createdAt)}</td>
+                <td className="px-4 py-3 text-center">
+                  <button
+                    onClick={() => handlePinToggle(post.id, post.isPinned)}
+                    title={post.isPinned ? '공지 해제' : '공지로 고정'}
+                    className={`p-1.5 rounded-lg transition-colors ${post.isPinned ? 'text-toss-blue hover:bg-toss-blueLight' : 'text-toss-gray300 hover:bg-toss-gray100 hover:text-toss-gray600'}`}
+                  >
+                    <Icon icon={post.isPinned ? 'solar:pin-bold' : 'solar:pin-linear'} className="text-base" />
+                  </button>
+                </td>
                 <td className="px-4 py-3">
                   <button onClick={() => handleDelete(post.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-toss-gray400 hover:text-toss-red">
                     <Icon icon="solar:trash-bin-2-bold" />

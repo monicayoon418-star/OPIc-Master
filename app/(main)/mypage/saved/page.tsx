@@ -52,7 +52,7 @@ export default async function SavedPage() {
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm text-toss-dark truncate">{item.post.title}</p>
                       <p className="text-xs text-toss-gray500">
-                        {item.post.type === 'REVIEW' ? '시험 후기' : '문제생성 후기'} · {formatDate(item.post.createdAt.toISOString())}
+                        {item.post.type === 'REVIEW' ? '시험 후기' : '공부꿀팁'} · {formatDate(item.post.createdAt.toISOString())}
                       </p>
                     </div>
                   </Link>

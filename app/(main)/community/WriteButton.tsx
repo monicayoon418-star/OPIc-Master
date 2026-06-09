@@ -42,7 +42,7 @@ export default function WriteButton() {
             className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-toss-dark hover:bg-toss-gray50 transition-colors border-t border-toss-gray100"
           >
             <span className="w-2 h-2 rounded-full bg-toss-green flex-shrink-0" />
-            문제생성 후기 작성
+            공부꿀팁 작성
           </button>
         </div>
       )}

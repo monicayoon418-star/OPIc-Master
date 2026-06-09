@@ -40,7 +40,7 @@ export default async function MyPostsPage() {
                     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                       post.type === 'REVIEW' ? 'bg-toss-blueLight text-toss-blue' : 'bg-green-100 text-toss-green'
                     }`}>
-                      {post.type === 'REVIEW' ? '시험 후기' : '문제생성 후기'}
+                      {post.type === 'REVIEW' ? '시험 후기' : '공부꿀팁'}
                     </span>
                   </div>
                   <p className="font-semibold text-sm text-toss-dark truncate">{post.title}</p>

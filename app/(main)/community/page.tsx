@@ -61,7 +61,7 @@ export default async function CommunityPage({
           {[
             { label: '전체', value: '' },
             { label: '시험 후기', value: 'REVIEW' },
-            { label: '문제생성 후기', value: 'STUDY' },
+            { label: '공부꿀팁', value: 'STUDY' },
           ].map(item => (
             <Link
               key={item.value}

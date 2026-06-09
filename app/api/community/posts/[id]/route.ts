@@ -33,7 +33,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const post = await prisma.post.findUnique({ where: { id } })
   if (!post || post.userId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { title, content } = await req.json()
-  const updated = await prisma.post.update({ where: { id }, data: { title, content } })
+  const { title, content, isAnonymous } = await req.json()
+  const updated = await prisma.post.update({
+    where: { id },
+    data: { title, content, ...(isAnonymous !== undefined && { isAnonymous }) },
+  })
   return NextResponse.json(updated)
 }
